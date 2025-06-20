@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: default
+spec:
+  acme:
+    email: rick.deboer@live.nl
+    # The server is replaced in /clusters/<environment>/infrastructure.yaml
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: issuer-account-key
+    solvers:
+      - selector:
+          dnsZones:
+            - 'rejdeboer.com'
+        dns01:
+          cnameStrategy: Follow
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-secret
+              key: cloudflare-api-token

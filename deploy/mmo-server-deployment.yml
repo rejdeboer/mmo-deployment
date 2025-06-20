@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mmo-server
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8000
+  selector:
+    app: mmo-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mmo-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mmo-server
+  template:
+    metadata:
+      labels:
+        app: mmo-server
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: workload-identity-sa
+      containers:
+        - name: mmo-server
+          image: rejdeboer.azurecr.io/mmo-server:7057bba6481fbef51a184cd6b5ee694321d94c2e
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ENVIRONMENT
+              value: production
+            - name: APP_APPLICATION__HOST
+              value: "127.0.0.1"
+            - name: APP_APPLICATION__PORT
+              value: "8000"
+            - name: APP_DATABASE__PORT
+              value: "5432"
+            - name: APP_DATABASE__DB_NAME
+              value: "mmo"
+            - name: APP_DATABASE__HOST
+              value: "mmo.postgres.database.azure.com"
+            - name: APP_DATABASE__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mmo-secrets
+                  key: postgres-username
+            - name: APP_DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mmo-secrets
+                  key: postgres-password
+            - name: APP_APPLICATION__SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mmo-secrets
+                  key: jwt-secret-key

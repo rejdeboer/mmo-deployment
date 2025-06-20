@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server
+  namespace: default
+spec:
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: web-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server
+  template:
+    metadata:
+      labels:
+        app: web-server
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: workload-identity-sa
+      containers:
+        - name: web-server
+          image: rejdeboer.azurecr.io/web-server:2b5262e742eb84a8e17545a2a20a13812e20d6c9
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ENVIRONMENT
+              value: production
+            - name: PORT
+              value: "8000"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "mmo"
+            - name: DB_HOST
+              value: "mmo.postgres.database.azure.com"
+            - name: DB_USERNAME
+              value: mmo-aks
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mmo-secrets
+                  key: jwt-secret-key
+            - name: KAFKA_ENDPOINT
+              value: "kafka-cluster-kafka-bootstrap:9200"
+            - name: ELASTICSEARCH_ENDPOINT
+              value: "https://elastic-cluster-es-http.default.SVC:9200"
+            - name: AZ_BLOB_STORAGE_ENDPOINT
+              value: https://rejdeboerprd.blob.core.windows.net/

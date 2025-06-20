@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: multiplayer-server
+  namespace: default
+  annotations:
+    cert-manager.io/issuer: letsencrypt 
+    nginx.ingress.kubernetes.io/force-ssl-redirect: true
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.rejdeboer.com
+      http:
+        paths:
+          # - path: /sync
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: multiplayer-websocket
+          #       port:
+          #         number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: multiplayer-server
+                port:
+                  number: 80
+  tls:
+    - secretName: letsencrypt-nginx-tls
+      hosts:
+        - api.rejdeboer.com
