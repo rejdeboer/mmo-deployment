@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "storage-account-resource-group"
+    resource_group_name  = "terraform-state"
     storage_account_name = "rejdeboertfstate"
-    key                  = "cluster.tfstate"
+    key                  = "mmo/cluster.tfstate"
   }
   required_providers {
     azurerm = {
