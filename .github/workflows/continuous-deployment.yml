@@ -27,9 +27,9 @@ jobs:
       - name: Azure login
         uses: azure/login@v1
         with:
-          client-id: ${{ env.AZ_CLIENT_ID }} 
-          tenant-id: ${{ env.AZ_TENANT_ID }}
-          subscription-id: ${{ env.AZ_SUBSCRIPTION_ID }}
+          client-id: ${{ vars.AZ_CLIENT_ID }} 
+          tenant-id: ${{ vars.AZ_TENANT_ID }}
+          subscription-id: ${{ vars.AZ_SUBSCRIPTION_ID }}
           enable-AzPSSession: false 
 
       - name: Get branch names
@@ -44,11 +44,11 @@ jobs:
       - name: Set resource group and cluster name
         id: set_aks_vars
         run: |
-          echo "::set-output name=resource_group_name::$(terraform -chdir=terraform/production output -raw resource_group_name)"
-          echo "::set-output name=cluster_name::$(terraform -chdir=terraform/production output -raw cluster_name)"
+          RG_NAME=$(terraform -chdir=terraform/production output -raw resource_group_name)
+          CLUSTER_NAME=$(terraform -chdir=terraform/production output -raw cluster_name)
+          echo "resource_group_name=$RG_NAME" >> $GITHUB_OUTPUT
+          echo "cluster_name=$CLUSTER_NAME" >> $GITHUB_OUTPUT
 
-          # TODO: Github recommends using below method, but it doesn't seem to work
-          # echo "{resource_group_name}={$(terraform -chdir=terraform output -raw resource_group_name)}" >> $GITHUB_STATE
 
       - name: Bootstrap cluster
         uses: ./.github/actions/deploy-terraform
