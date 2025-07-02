@@ -8,11 +8,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.96.0"
+      version = "4.35.0"
     }
     flux = {
       source  = "fluxcd/flux"
-      version = ">=1.3.0"
+      version = ">=1.6.3"
     }
   }
 }
