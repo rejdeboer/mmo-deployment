@@ -1,0 +1,33 @@
+name: "deploy terraform"
+description: "Performs a deploy with terraform"
+inputs:
+  STATE_CONTAINER:
+    default: ""
+  WORKING_DIRECTORY:
+    required: true
+    description: "The working directory"
+  TERRAFORM_ADDITIONAL:
+    required: false
+    default: ""
+    description: "Additional terraform commands to pass to build"
+  TERRAFORM_WRAPPER:
+    required: false
+    default: false
+    description: "If the terraform output should be wrapped"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: ${{ inputs.TERRAFORM_WRAPPER }}
+
+    - name: Terraform Init
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      run: terraform init ${{ inputs.STATE_CONTAINER != '' && format('-backend-config="container_name={0}"', inputs.STATE_CONTAINER) || '' }}
+      shell: bash
+
+    - name: Terraform Destroy
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      run: terraform destroy -auto-approve -input=false ${{ inputs.TERRAFORM_ADDITIONAL }}
+      shell: bash

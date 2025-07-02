@@ -1,0 +1,30 @@
+name: Destroy resources
+
+on: 
+  workflow_dispatch:
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+  VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+
+jobs:
+  deploy:
+    name: Destroy
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Destroy Infrastructure
+        uses: ./.github/actions/destroy-terraform
+        with:
+          WORKING_DIRECTORY: ./terraform/production
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+

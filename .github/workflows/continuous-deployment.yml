@@ -1,0 +1,117 @@
+name: Continuous deployment
+
+on:
+  push:
+    paths:
+      - ".github/**"
+      - "terraform/**"
+  workflow_dispatch:
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+  VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+
+permissions:
+      id-token: write
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    environment: Production
+    outputs:
+      resource_group_name: ${{ steps.set_aks_vars.outputs.resource_group_name }}
+      cluster_name: ${{ steps.set_aks_vars.outputs.cluster_name }}
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZ_CLIENT_ID }} 
+          tenant-id: ${{ env.AZ_TENANT_ID }}
+          subscription-id: ${{ env.AZ_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false 
+
+      - name: Get branch names
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
+      - name: Deploy infrastructure
+        uses: ./.github/actions/deploy-terraform
+        with:
+          WORKING_DIRECTORY: ./terraform/production
+
+      - name: Set resource group and cluster name
+        id: set_aks_vars
+        run: |
+          echo "::set-output name=resource_group_name::$(terraform -chdir=terraform/production output -raw resource_group_name)"
+          echo "::set-output name=cluster_name::$(terraform -chdir=terraform/production output -raw cluster_name)"
+
+          # TODO: Github recommends using below method, but it doesn't seem to work
+          # echo "{resource_group_name}={$(terraform -chdir=terraform output -raw resource_group_name)}" >> $GITHUB_STATE
+
+      - name: Bootstrap cluster
+        uses: ./.github/actions/deploy-terraform
+        with:
+          WORKING_DIRECTORY: ./terraform/cluster-bootstrap
+          STATE_CONTAINER: production
+        env:
+          TF_VAR_cluster_name: ${{ steps.set_aks_vars.outputs.cluster_name }}
+          TF_VAR_resource_group_name: ${{ steps.set_aks_vars.outputs.resource_group_name }}
+          TF_VAR_github_org: ${{ github.repository_owner }}
+          TF_VAR_github_repository: ${{ github.event.repository.name }}
+          TF_VAR_github_token: ${{ secrets.GH_PAT }}
+          TF_VAR_github_branch: ${{ steps.branch-names.outputs.current_branch }}
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: Production
+    needs: terraform
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Setup Flux
+        uses: fluxcd/flux2/action@main
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZ_CLIENT_ID }} 
+          tenant-id: ${{ env.AZ_TENANT_ID }}
+          subscription-id: ${{ env.AZ_SUBSCRIPTION_ID }}
+
+      - name: Set AKS context
+        id: set_context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ needs.terraform.outputs.resource_group_name }}
+          cluster-name: ${{ needs.terraform.outputs.cluster_name }}
+
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+
+      # - name: Run kubectl pre-deployment scripts
+      #   run: |
+      #     ./scripts/install-eck.sh
+
+      - name: Verify cluster reconciliation
+        run: |
+          kubectl -n flux-system wait kustomization/infrastructure-controllers --for=condition=ready --timeout=5m
+
+      - name: Debug failure
+        if: failure()
+        run: |
+          kubectl -n flux-system get all
+          kubectl -n flux-system logs deploy/source-controller
+          kubectl -n flux-system logs deploy/kustomize-controller
+          kubectl -n flux-system logs deploy/helm-controller
+          flux get all --all-namespaces

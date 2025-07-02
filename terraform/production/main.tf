@@ -3,28 +3,16 @@ terraform {
     resource_group_name  = "storage-account-resource-group"
     storage_account_name = "rejdeboertfstate"
     container_name       = "production"
-    key                  = "infrastructure.tfstate"
+    key                  = "mmo/infrastructure.tfstate"
   }
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "3.96.0"
     }
-    github = {
-      source  = "integrations/github"
-      version = ">=5.18.0"
-    }
     flux = {
       source  = "fluxcd/flux"
       version = ">=1.3.0"
-    }
-    vercel = {
-      source  = "vercel/vercel"
-      version = "1.10.1"
-    }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "4.34.0"
     }
   }
 }
@@ -42,7 +30,7 @@ resource "azurerm_resource_group" "resource_group" {
 }
 
 locals {
-  project_name = "multiplayer-server"
+  project_name = "mmo"
   organization = "rejdeboer"
   environment  = "prd"
 }
