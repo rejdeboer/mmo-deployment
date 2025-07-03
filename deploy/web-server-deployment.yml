@@ -30,7 +30,7 @@ spec:
       serviceAccountName: workload-identity-sa
       containers:
         - name: web-server
-          image: rejdeboer.azurecr.io/web-server:2b5262e742eb84a8e17545a2a20a13812e20d6c9
+          image: rejdeboer/web-server:latest
           resources:
             requests:
               memory: "256Mi"
@@ -58,9 +58,3 @@ spec:
                 secretKeyRef:
                   name: mmo-secrets
                   key: jwt-secret-key
-            - name: KAFKA_ENDPOINT
-              value: "kafka-cluster-kafka-bootstrap:9200"
-            - name: ELASTICSEARCH_ENDPOINT
-              value: "https://elastic-cluster-es-http.default.SVC:9200"
-            - name: AZ_BLOB_STORAGE_ENDPOINT
-              value: https://rejdeboerprd.blob.core.windows.net/

@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   default_node_pool {
     name           = "default"
     node_count     = 1
-    vm_size        = "standard_d2_v2"
+    vm_size        = "standard_a4_v2"
     vnet_subnet_id = azurerm_subnet.aks.id
   }
 
@@ -28,7 +28,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "mem" {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.cluster.id
   name                  = "mem"
   node_count            = "1"
-  vm_size               = "standard_d11_v2"
+  vm_size               = "standard_a4_v2"
   vnet_subnet_id        = azurerm_subnet.aks.id
 }
 

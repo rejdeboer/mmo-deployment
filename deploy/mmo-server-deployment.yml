@@ -30,7 +30,7 @@ spec:
       serviceAccountName: workload-identity-sa
       containers:
         - name: mmo-server
-          image: rejdeboer.azurecr.io/mmo-server:7057bba6481fbef51a184cd6b5ee694321d94c2e
+          image: rejdeboer/mmo-server:latest
           resources:
             requests:
               memory: "256Mi"
