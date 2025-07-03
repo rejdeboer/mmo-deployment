@@ -7,6 +7,9 @@ env:
   ARM_CLIENT_ID: ${{ vars.AZ_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
+
+permissions:
+      id-token: write
   
 jobs:
   deploy:

@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "akv" {
-  name                = "${local.project_name}-${local.environment}"
+  name                = "${local.organization}-${local.project_name}-${local.environment}"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
