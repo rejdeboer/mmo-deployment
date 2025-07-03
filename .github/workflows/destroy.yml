@@ -3,6 +3,11 @@ name: Destroy resources
 on: 
   workflow_dispatch:
 
+env:
+  ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+  
 jobs:
   deploy:
     name: Destroy
