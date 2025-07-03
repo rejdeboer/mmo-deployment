@@ -1,10 +1,11 @@
 name: Continuous deployment
 
 on:
-  push:
-    paths:
-      - ".github/**"
-      - "terraform/**"
+  # push:
+  #   paths:
+  #     - ".github/**"
+  #     - "terraform/production/**"
+  #     - "terraform/cluster-bootstrap/**"
   workflow_dispatch:
 
 permissions:

@@ -1,27 +1,27 @@
-resource "proxmox_virtual_environment_file" "debian_cloud_image" {
+data "local_file" "ssh_public_key" {
+  filename = "ssh.pub"
+}
+
+resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
   content_type = "iso"
   datastore_id = "local"
   node_name    = "host1"
 
-  source_file {
-    path      = "https://cdimage.debian.org/images/cloud/bullseye/20221219-1234/debian-11-genericcloud-amd64-20221219-1234.qcow2"
-    file_name = "debian-11-genericcloud-amd64-20221219-1234.img"
-    checksum  = "ba0237232247948abf7341a495dec009702809aa7782355a1b35c112e75cee81"
-  }
+  url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 }
 
 resource "proxmox_virtual_environment_vm" "k3s_master_01" {
-  name        = "k8s-controlplane-01"
+  name        = "k3s-master-01"
   description = "Managed by Terraform"
   tags        = ["terraform"]
   node_name   = "host1"
 
   cpu {
-    cores = 2
+    cores = 4
   }
 
   memory {
-    dedicated = 6144
+    dedicated = 12288
   }
 
   agent {
@@ -34,12 +34,14 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
 
   disk {
     datastore_id = "local-lvm"
-    file_id      = proxmox_virtual_environment_file.debian_cloud_image.id
-    interface    = "scsi0"
-    size         = 32
+    file_id      = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
+    interface    = "virtio0"
+    iothread     = true
+    discard      = "on"
+    size         = 20
   }
 
-  serial_device {} # The Debian cloud image expects a serial port to be present
+  serial_device {}
 
   operating_system {
     type = "l26" # Linux Kernel 2.6 - 5.X.
@@ -48,8 +50,14 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = "192.168.3.233/24"
+        gateway = "192.168.3.1"
       }
+    }
+
+    user_account {
+      username = "ubuntu"
+      keys     = [trimspace(data.local_file.ssh_public_key.content)]
     }
   }
 }
