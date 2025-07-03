@@ -3,6 +3,9 @@ terraform {
     resource_group_name  = "terraform-state"
     storage_account_name = "rejdeboertfstate"
     key                  = "mmo/cluster.tfstate"
+    container_name       = "production"
+    // MSDN development subscription is used for infra
+    subscription_id = "17f3be6b-b54a-446b-b4c4-29a7d7b91afe"
   }
   required_providers {
     azurerm = {

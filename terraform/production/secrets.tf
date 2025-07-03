@@ -5,13 +5,11 @@ resource "random_string" "postgres_username" {
 }
 
 resource "random_password" "postgres_password" {
-  length  = 32
-  special = false
+  length = 32
 }
 
 resource "random_password" "jwt_secret_key" {
-  length  = 32
-  special = false
+  length = 32
 }
 
 resource "azurerm_key_vault_secret" "postgres_username" {
