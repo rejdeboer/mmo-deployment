@@ -1,7 +1,3 @@
-data "local_file" "ssh_public_key" {
-  filename = "ssh.pub"
-}
-
 resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
   content_type = "iso"
   datastore_id = "local"
@@ -41,24 +37,14 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
     size         = 20
   }
 
-  serial_device {}
-
-  operating_system {
-    type = "l26" # Linux Kernel 2.6 - 5.X.
-  }
-
   initialization {
     ip_config {
       ipv4 {
-        address = "192.168.3.233/24"
-        gateway = "192.168.3.1"
+        address = "dhcp"
       }
     }
 
-    user_account {
-      username = "ubuntu"
-      keys     = [trimspace(data.local_file.ssh_public_key.content)]
-    }
+    user_data_file_id = proxmox_virtual_environment_file.user_data_cloud_config.id
   }
 }
 
