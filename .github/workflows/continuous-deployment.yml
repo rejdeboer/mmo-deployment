@@ -11,9 +11,9 @@ permissions:
       id-token: write
 
 env:
-  ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+  ARM_CLIENT_ID: ${{ vars.AZ_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
 
 jobs:
   terraform:
