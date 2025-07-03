@@ -26,4 +26,6 @@ jobs:
         uses: ./.github/actions/destroy-terraform
         with:
           WORKING_DIRECTORY: ./terraform/production
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
