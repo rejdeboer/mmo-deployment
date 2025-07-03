@@ -46,5 +46,20 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
 
     user_data_file_id = proxmox_virtual_environment_file.user_data_cloud_config.id
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Waiting for cloud-init to complete...'",
+      "while [ ! -f /tmp/cloud-config.done ]; do sleep 5; done",
+      "echo 'Cloud-init finished!'",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.ssh_private_key_path)
+      host        = self.ipv4_addresses[1][0]
+    }
+  }
 }
 
