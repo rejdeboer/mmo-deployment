@@ -34,6 +34,7 @@ spec:
     prometheus:
       prometheusSpec:
         retention: 24h
+        scrapeInterval: 2m
         resources:
           requests:
             cpu: 200m
