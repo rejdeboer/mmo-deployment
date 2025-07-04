@@ -2,7 +2,7 @@
 
 # A script to standardize the creation of Sealed Secrets.
 
-CONTROLLER_NS="flux-system"
+CONTROLLER_NS="sealed-secrets"
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
