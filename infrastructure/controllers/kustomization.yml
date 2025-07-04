@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # - cert-manager.yml
-  - external-secrets.yml
+  - sealed-secrets.yml
   # - ingress-nginx.yml
   # - kafka.yml
   # - kube-prometheus-stack

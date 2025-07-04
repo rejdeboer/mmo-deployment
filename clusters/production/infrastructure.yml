@@ -39,10 +39,3 @@ spec:
       target:
         kind: Issuer
         name: letsencrypt
-    - patch: |
-        - op: replace
-          path: /spec/provider/azurekv/vaultUrl
-          value: https://rejdeboer-mmo-prd.vault.azure.net
-      target:
-        kind: SecretStore
-        name: azure-store
