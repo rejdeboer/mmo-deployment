@@ -1,0 +1,25 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-main
+  namespace: cnpg 
+spec:
+  # Create a single instance. For HA, change this to 3.
+  instances: 1
+
+  # The operator will find this secret and use its 'username' and 'password'
+  # fields to create the initial application user.
+  bootstrap:
+    initdb:
+      database: mmo 
+      owner: mmo  
+      secret:
+        name: postgres-main-app-credentials 
+
+  storage:
+    size: 10Gi
+    storageClass: longhorn
+
+  # For a homelab, this allows the operator to automatically restart the
+  # primary instance after a configuration change or upgrade.
+  primaryUpdateStrategy: unsupervised
