@@ -25,7 +25,8 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge      = "vmbr0"
+    mac_address = "BC:24:11:FA:90:BA"
   }
 
   disk {
