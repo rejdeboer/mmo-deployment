@@ -21,7 +21,7 @@ spec:
       database: mmo 
       owner: mmo  
       secret:
-        name: postgres-main-app-credentials 
+        name: postgres-credentials 
 
   storage:
     size: 10Gi
@@ -32,3 +32,19 @@ spec:
   # For a homelab, this allows the operator to automatically restart the
   # primary instance after a configuration change or upgrade.
   primaryUpdateStrategy: unsupervised
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: pg-secret
+  namespace: default
+spec:
+  encryptedData:
+    password: AgCWEnqEFgsyP3G7WrKFXjcWpYx5A6XPP3lE2CcLVCLMbBYu/hg17X8LJSs/RGEpdX9InyrntikCH8/YZch6IV/oI6ouDONBYC9lFOCWHagF0nQm0uT+BWbVUeweKlTFCJ5xetuYWvK/4ptPPN1NpCeUNF5WaMuZ4nbW2zLOgECDFNyWA2EPXNrKgTmLSwcEX6FBcUgHpbfxGJj/bWAWG/pUlOMuj/10u7JhNForxpZlN5+2i9DjRN5OLXxYOnZbXrRXVpBCw4UUcDz5mjiU1tULZCA7sKoZMTnyYP6Gx1A6mC/C85BH+Bbt3wNcWWHTi9M5/jLgZnXGzDp+Lpx6dO+vkXZWe2Om88vuWsrZoUZnOx8rUxsMMJRcSLrB5uq/0VfILCW/7O/lpcvSBdKiYJd3wY6rJFMkUs+h1YP9EgElXW4wOc05v9/eJ6od+le8xKUcjNBnMM5MU9pWSIjR4OdAvdFrYRzkkcawHhVxPamIFWa7ZpJ/4c500YZcM5yognHbF0L6j61CGduo4W9zmXA18vEuvSing8pH8ohloM0hCLIwpH25F17g30Y5C4GXuYXT0s0T4vqT7muisfBbKMnKLN66nvpgl9T8EpRhL/Sn5jzN36eW6MFRbEBRSP13scokm4Du0jiQOiD9PMANh31v/eURLr8Z/fRGSq5aBYypEDkYceQ5wtJ9/X8LlDwud2L1PtFIGND9qmZ2z5xubGc3Hth5Rg==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: pg-secret
+      namespace: default
+

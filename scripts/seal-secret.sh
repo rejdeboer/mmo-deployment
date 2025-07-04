@@ -28,7 +28,8 @@ kubectl create secret generic "${SECRET_NAME}" \
   --namespace="${SECRET_NAMESPACE}" \
   --from-literal="${KEY_NAME}=${VALUE}" \
   --dry-run=client -o yaml | \
-kubeseal --controller-namespace="${CONTROLLER_NS}" \
+kubeseal --controller-name sealed-secrets-sealed-secrets \
+         --controller-namespace="${CONTROLLER_NS}" \
          --format=yaml
 
 echo -e "\n✅ Success! Pipe the output above into a YAML file in your Git repository."

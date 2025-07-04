@@ -19,3 +19,14 @@ spec:
             value: mmo
           - name: DB_USERNAME
             value: mmo
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pg-secret
+                namespace: default
+                key: password
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?sslmode=disable"
+            sqlx migrate run
