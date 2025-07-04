@@ -5,23 +5,17 @@ metadata:
   namespace: default
 spec:
   template:
-    metadata:
-      labels:
-        azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: workload-identity-sa
       restartPolicy: Never
       containers:
       - name: migration
-        image: rejdeboer.azurecr.io/mmo-db-migration:2b5262e742eb84a8e17545a2a20a13812e20d6c9
+        image: mmo-db-migration:latest
         env:
-          - name: ENVIRONMENT
-            value: production
           - name: DB_HOST
-            value: mmo.postgres.database.azure.com
+            value: postgres-main-rw.cnpg.svc.cluster.local
           - name: DB_PORT
             value: "5432"
           - name: DB_NAME
             value: mmo
           - name: DB_USERNAME
-            value: mmo-aks
+            value: mmo
