@@ -9,7 +9,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: migration
-        image: mmo-db-migration:latest
+        image: rejdeboer/mmo-db-migration:latest
         env:
           - name: DB_HOST
             value: postgres-main-rw.cnpg.svc.cluster.local
