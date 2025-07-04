@@ -19,7 +19,13 @@ spec:
             value: mmo
           - name: DB_USERNAME
             value: mmo
-          - name: PG_PASSWORD
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: pg-secret
+                namespace: default
+                key: username
+          - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: pg-secret

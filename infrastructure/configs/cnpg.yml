@@ -21,7 +21,8 @@ spec:
       database: mmo 
       owner: mmo  
       secret:
-        name: postgres-credentials 
+        name: pg-secret 
+        namespace: default
 
   storage:
     size: 10Gi
@@ -41,10 +42,10 @@ metadata:
   namespace: default
 spec:
   encryptedData:
-    password: AgCWEnqEFgsyP3G7WrKFXjcWpYx5A6XPP3lE2CcLVCLMbBYu/hg17X8LJSs/RGEpdX9InyrntikCH8/YZch6IV/oI6ouDONBYC9lFOCWHagF0nQm0uT+BWbVUeweKlTFCJ5xetuYWvK/4ptPPN1NpCeUNF5WaMuZ4nbW2zLOgECDFNyWA2EPXNrKgTmLSwcEX6FBcUgHpbfxGJj/bWAWG/pUlOMuj/10u7JhNForxpZlN5+2i9DjRN5OLXxYOnZbXrRXVpBCw4UUcDz5mjiU1tULZCA7sKoZMTnyYP6Gx1A6mC/C85BH+Bbt3wNcWWHTi9M5/jLgZnXGzDp+Lpx6dO+vkXZWe2Om88vuWsrZoUZnOx8rUxsMMJRcSLrB5uq/0VfILCW/7O/lpcvSBdKiYJd3wY6rJFMkUs+h1YP9EgElXW4wOc05v9/eJ6od+le8xKUcjNBnMM5MU9pWSIjR4OdAvdFrYRzkkcawHhVxPamIFWa7ZpJ/4c500YZcM5yognHbF0L6j61CGduo4W9zmXA18vEuvSing8pH8ohloM0hCLIwpH25F17g30Y5C4GXuYXT0s0T4vqT7muisfBbKMnKLN66nvpgl9T8EpRhL/Sn5jzN36eW6MFRbEBRSP13scokm4Du0jiQOiD9PMANh31v/eURLr8Z/fRGSq5aBYypEDkYceQ5wtJ9/X8LlDwud2L1PtFIGND9qmZ2z5xubGc3Hth5Rg==
+    password: AgAiBvls7qniOWVwLsfBIgVFg1+VxcBE0RVu7tvuXSi+2uyZwlVcQdG7J25VObvgeGSFsyk109keE7020LoyMHhjAsHVZXZwVVQaA/GRccRapoaLbCrQ6a5xbd0i/+yWEAK4oEa8EYq2ooKJCPMexsmB8TX2FYr3c1UxDHqkjmyMe0mDLCn+0jUyiBP+JWiLJeM7dsl6VJmu+PalgWbDubvxQeksQ/ImSDVUr7p4bMKLAeN+maHkWaYieFaENBRMhggZngOaZQxQvN/NDB/iYbGmgyoPexNzDcOqfaeRiLQ0+9tz9iSi9xSztkV6QrGkwhQ2LYccMzix8FiTQThkPZR0GfIc+Yw0yx6zr0fMPqa8jnp3+NrSAmB5AMotwMAz/X/mMNFh+xGf6P5P+cmWU8XyMrZe1/1OQpeniG7jUHFDXdTzlKWyfMHCh37r5zhtY0o8Ce2KolkgbbBPZVyO7NVay9+GnouSRAarzeCz1j+DmNzhd137X6bUzkcKFsmioel/meZedGObRT5d4Me/7nIsfesoHD6LL/EcHmRtJ4QVrCUD+wwajaHLWCLtJzE/QpmrF4gtX8BHTG63UHymr2Qzp2TNFbL34Uc2R8aAgbUFu64ZnQdQBwgnPeIoYK7JsGaL0UXj+SJERr6fEE8zZcd1eOWIBi1rAXfLbq6/KM5KYQ1cXYLgYCVN9xsQkQ46fT5BdxTUHhPJ6sHefgYQg1zoVRnEFA==
+    username: AgCHH0HIlzlmHm8M/VSyQJpvvWQAPCfpIhybDp3RpoYNwv5GzZexdXd8vwFRq6EqTaC2RQQxPl69701Xc74GswSmofPUrBCDIat2QJ38tY95uA9XVnkJvewEhGugi7i5AHRghhWXzA28naeJQ6UHtwfkRUMPnTmlR/HTzhvmHdhEDghtu9HeiX6MAC8qBy/gvVdeOnvT5aduDliRfpilC4xw3RdF/hTxGhyQ6saXxsEULsQ31EaHXOA1UjhePZDYFnfxPJOH+3ETw7MhZ8rqQOmiRiEGZYpfHeVWL7sifEipoBVLhbPah8LwzN2p4oI4xVCudNimEqSxUn3YOV69/++lxHq/96ZFmBWklf80sQdsmI3vMdjTqxaezfHMeRatQWiS0Y2vAmuWWsCzj9chWlvsuKP/25L7VO1QnVdbfyeAXeV2QQB/SkVobKl16rENmTTefIt6Qg7HdDUc7otQ92mbBvefNwmyy8TWmTU0u0eJSIri/Ns02h28NAfj1bJPClGR1t0x+h5J1wop8PNe7RcuoqVEAWjhihPsHDko6MS4lIjQQV3kRhyMb4r/MwgySrndUCcxc2vXXp5hIwrBreSAicEEqP1FhB7XqvywTAXBHBYuHLKZxVTWFuUWuCyD9tV/aVXQseCFScl9Yiywf3FaCLrQhuho4vp5Sz6+ZSUOJiBjmOBNffmGH0jYvisi+kVlk2YP5RQkHR7F6RMkgXO4tqizdw==
   template:
     metadata:
       creationTimestamp: null
       name: pg-secret
       namespace: default
-
