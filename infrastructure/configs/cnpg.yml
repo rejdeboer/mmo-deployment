@@ -25,7 +25,9 @@ spec:
 
   storage:
     size: 10Gi
-    storageClass: longhorn
+    storageClass: local-path
+    # TODO: Use longhorn when we have better hardware
+    # storageClass: longhorn
 
   # For a homelab, this allows the operator to automatically restart the
   # primary instance after a configuration change or upgrade.
