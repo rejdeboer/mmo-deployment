@@ -2,18 +2,16 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # - cluster-issuers.yml
-  # - elasticsearch.yml
-  # - kafka.yml
-  # - podmonitor.yml
-# configMapGenerator:
-#   - name: flux-grafana-dashboards
-#     namespace: monitoring
-#     files:
-#       - dashboards/control-plane.json
-#       - dashboards/cluster.json
-#       - dashboards/logs.json
-#     options:
-#       labels:
-#         grafana_dashboard: "1"
-#         app.kubernetes.io/part-of: flux
-#         app.kubernetes.io/component: monitoring
+  - podmonitor.yml
+configMapGenerator:
+  - name: flux-grafana-dashboards
+    namespace: monitoring
+    files:
+      - dashboards/control-plane.json
+      - dashboards/cluster.json
+      - dashboards/logs.json
+    options:
+      labels:
+        grafana_dashboard: "1"
+        app.kubernetes.io/part-of: flux
+        app.kubernetes.io/component: monitoring
