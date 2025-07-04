@@ -11,3 +11,8 @@ variable "ssh_private_key_path" {
   type    = string
   default = "~/.ssh/id_rsa"
 }
+
+variable "master_key_manifest_path" {
+  type    = string
+  default = "~/tmp/sealed-secrets-key.yml"
+}

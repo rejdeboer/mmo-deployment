@@ -15,6 +15,9 @@ resource "null_resource" "flux_bootstrap" {
 
   provisioner "local-exec" {
     command = <<-EOT
+      kubectl create namespace sealed-secrets
+      kubectl apply -f ${var.master_key_manifest_path}
+
       flux bootstrap github \
       --owner=rejdeboer \
       --repository=mmo-deployment \
