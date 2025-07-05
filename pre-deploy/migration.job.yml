@@ -17,7 +17,7 @@ spec:
             value: "5432"
           - name: DB_NAME
             value: mmo
-          - name: DB_USERNAME
+          - name: DB_USER
             valueFrom:
               secretKeyRef:
                 name: pg-secret
