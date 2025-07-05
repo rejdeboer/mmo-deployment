@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # - external-dns.yml
-  # - ingress.yml
-  - multiplayer-server-deployment.yml
-  # - multiplayer-websocket-deployment.yml
+  - ingress.yml
+  - mmo-server-deployment.yml
+  - web-server-deployment.yml

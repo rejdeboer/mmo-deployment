@@ -25,9 +25,7 @@ spec:
     metadata:
       labels:
         app: web-server
-        azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: workload-identity-sa
       containers:
         - name: web-server
           image: rejdeboer/web-server:latest
@@ -43,18 +41,23 @@ spec:
           env:
             - name: ENVIRONMENT
               value: production
-            - name: PORT
+            - name: APP_APPLICATION__HOST
+              value: "127.0.0.1"
+            - name: APP_APPLICATION__PORT
               value: "8000"
-            - name: DB_PORT
+            - name: APP_DATABASE__PORT
               value: "5432"
-            - name: DB_NAME
+            - name: APP_DATABASE__DB_NAME
               value: "mmo"
-            - name: DB_HOST
-              value: "mmo.postgres.database.azure.com"
-            - name: DB_USERNAME
-              value: mmo-aks
-            - name: JWT_SECRET_KEY
+            - name: APP_DATABASE__HOST
+              value: "postgres-main-rw"
+            - name: APP_DATABASE__USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mmo-secrets
-                  key: jwt-secret-key
+                  name: pg-secret
+                  key: username
+            - name: APP_DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: password

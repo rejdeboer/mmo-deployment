@@ -4,9 +4,9 @@ metadata:
   name: mmo-server
   namespace: default
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
-    - port: 80
+    - port: 27015
       targetPort: 8000
   selector:
     app: mmo-server
@@ -40,31 +40,27 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8000
+              protocol: UDP
           env:
             - name: ENVIRONMENT
               value: production
-            - name: APP_APPLICATION__HOST
+            - name: APP_SERVER__HOST
               value: "127.0.0.1"
-            - name: APP_APPLICATION__PORT
+            - name: APP_SERVER__PORT
               value: "8000"
             - name: APP_DATABASE__PORT
               value: "5432"
             - name: APP_DATABASE__DB_NAME
               value: "mmo"
             - name: APP_DATABASE__HOST
-              value: "mmo.postgres.database.azure.com"
+              value: "postgres-main-rw"
             - name: APP_DATABASE__USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mmo-secrets
-                  key: postgres-username
+                  name: pg-secret
+                  key: username
             - name: APP_DATABASE__PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mmo-secrets
-                  key: postgres-password
-            - name: APP_APPLICATION__SIGNING_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mmo-secrets
-                  key: jwt-secret-key
+                  name: pg-secret
+                  key: password
