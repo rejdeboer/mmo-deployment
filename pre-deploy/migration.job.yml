@@ -23,13 +23,11 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: pg-secret
-                namespace: default
                 key: username
           - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: pg-secret
-                namespace: default
                 key: password
         command: ["/bin/sh", "-c"]
         args:
