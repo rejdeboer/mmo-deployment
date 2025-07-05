@@ -31,3 +31,4 @@ spec:
       remediateLastFailure: true
     cleanupOnFail: true
   releaseName: metallb
+  targetNamespace: metallb-system
