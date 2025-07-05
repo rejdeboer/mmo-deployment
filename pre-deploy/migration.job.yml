@@ -12,12 +12,10 @@ spec:
         image: rejdeboer/mmo-db-migration:latest
         env:
           - name: DB_HOST
-            value: postgres-main-rw.cnpg.svc.cluster.local
+            value: postgres-main-rw
           - name: DB_PORT
             value: "5432"
           - name: DB_NAME
-            value: mmo
-          - name: DB_USERNAME
             value: mmo
           - name: DB_USERNAME
             valueFrom:
