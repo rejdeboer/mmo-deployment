@@ -4,7 +4,7 @@ CONTROLLER_NS="sealed-secrets"
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
-if [ "$#" -ne 4 ]; then
+if [ "$#" -lt 3 ]; then
     echo "Usage: $0 <secret-name> <secret-namespace> <key1=value1> [key2=value2] ..."
     echo "Example: $0 my-db-secret default username admin"
     exit 1

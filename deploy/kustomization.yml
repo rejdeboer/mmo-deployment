@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   # - external-dns.yml
   - ingress.yml
-  - jwt-secret.yml
   - mmo-server-deployment.yml
+  - secret.yml
   - web-server-deployment.yml

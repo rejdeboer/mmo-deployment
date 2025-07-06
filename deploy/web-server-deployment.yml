@@ -66,3 +66,12 @@ spec:
                 secretKeyRef:
                   name: pg-secret
                   key: password
+            - name: APP_GAME_SERVER__HOST
+              # TODO: Won't work
+              value: "mmo-server"
+            - name: APP_GAME_SERVER__NETCODE_PRIVATE_KEY
+              # TODO: Won't work
+              valueFrom:
+                secretKeyRef:
+                  name: netcode-secret
+                  key: private-key
