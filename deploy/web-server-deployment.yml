@@ -45,6 +45,11 @@ spec:
               value: "127.0.0.1"
             - name: APP_APPLICATION__PORT
               value: "8000"
+            - name: APP_APPLICATION__JWT_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: signing-key
             - name: APP_DATABASE__PORT
               value: "5432"
             - name: APP_DATABASE__DB_NAME
