@@ -4,5 +4,5 @@ resources:
   # - external-dns.yml
   - ingress.yml
   - mmo-server-deployment.yml
-  - secret.yml
+  - secrets.yml
   - web-server-deployment.yml
