@@ -26,7 +26,7 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
-      - curl -sfL https://get.k3s.io | sh -
+      - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -
       - echo "done" > /tmp/cloud-config.done
     EOF
 
