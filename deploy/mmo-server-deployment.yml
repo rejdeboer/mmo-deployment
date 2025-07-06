@@ -8,6 +8,7 @@ spec:
   ports:
     - port: 27015
       targetPort: 8000
+      protocol: UDP
   selector:
     app: mmo-server
 ---
@@ -25,9 +26,7 @@ spec:
     metadata:
       labels:
         app: mmo-server
-        azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: workload-identity-sa
       containers:
         - name: mmo-server
           image: rejdeboer/mmo-server:latest
