@@ -63,6 +63,8 @@ spec:
           envFrom:
             - secretRef:
                 name: pihole-secret
+      securityContext:
+        fsGroup: 65534
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
