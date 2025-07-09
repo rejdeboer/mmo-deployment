@@ -5,10 +5,9 @@ metadata:
   namespace: default
   annotations:
     cert-manager.io/issuer: letsencrypt 
-    nginx.ingress.kubernetes.io/force-ssl-redirect: true
-    kubernetes.io/ingress.class: "traefik" 
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: mmo.homelab.io
       http:

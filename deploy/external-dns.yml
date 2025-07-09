@@ -56,6 +56,8 @@ spec:
             - --source=service
             - --source=ingress
             - --provider=pihole
+            - --policy=upsert-only
+            - --pihole-api-version=6
             - --pihole-server=http://192.168.0.53
             # - --domain-filter=rejdeboer.com
             # - --cloudflare-proxied
