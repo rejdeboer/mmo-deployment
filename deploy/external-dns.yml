@@ -18,6 +18,9 @@ rules:
 - apiGroups: [""]
   resources: ["nodes"]
   verbs: ["list","watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
+  verbs: ["get", "watch", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -56,6 +59,8 @@ spec:
             - --source=service
             - --source=ingress
             - --provider=pihole
+            # NOTE: Pihole only supports A/AAAA/CNAME, so we need to prevent trying o create TXT
+            - --registry=noop
             - --policy=upsert-only
             - --pihole-api-version=6
             - --pihole-server=http://192.168.0.53
