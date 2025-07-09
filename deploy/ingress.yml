@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: multiplayer-server
+  name: mmo
   namespace: default
   annotations:
     cert-manager.io/issuer: letsencrypt 
@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.rejdeboer.com
+    - host: mmo.homelab.io
       http:
         paths:
           - path: /
@@ -20,7 +20,7 @@ spec:
                 name: web-server
                 port:
                   number: 80
-  tls:
-    - secretName: letsencrypt-nginx-tls
-      hosts:
-        - api.rejdeboer.com
+  # tls:
+  #   - secretName: letsencrypt-nginx-tls
+  #     hosts:
+  #       - mmo.homelab.io
