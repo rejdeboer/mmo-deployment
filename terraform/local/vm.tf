@@ -35,7 +35,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
-    size         = 20
+    size         = 60
   }
 
   initialization {

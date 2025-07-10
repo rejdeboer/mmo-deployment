@@ -1,70 +1,61 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mmo-server
-  namespace: default
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 27015
-      targetPort: 8000
-      protocol: UDP
-  selector:
-    app: mmo-server
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: agones.dev/v1
+kind: Fleet
 metadata:
   name: mmo-server
   namespace: default
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: mmo-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: "25%"
+      maxUnavailable: "25%"
   template:
     metadata:
       labels:
-        app: mmo-server
+        # TODO: Do we need this?
+        realm: main
     spec:
-      containers:
-        - name: mmo-server
-          image: rejdeboer/mmo-server:latest
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "300m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          ports:
-            - containerPort: 8000
-              protocol: UDP
-          env:
-            - name: ENVIRONMENT
-              value: production
-            - name: APP_SERVER__HOST
-              value: "127.0.0.1"
-            - name: APP_SERVER__PORT
-              value: "8000"
-            - name: APP_SERVER__NETCODE_PRIVATE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: netcode-secret
-                  key: private-key
-            - name: APP_DATABASE__PORT
-              value: "5432"
-            - name: APP_DATABASE__DB_NAME
-              value: "mmo"
-            - name: APP_DATABASE__HOST
-              value: "postgres-main-rw"
-            - name: APP_DATABASE__USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret
-                  key: username
-            - name: APP_DATABASE__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pg-secret
-                  key: password
+      template:
+        spec:
+          containers:
+            - name: mmo-server
+              image: rejdeboer/mmo-server:latest
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "300m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "500m"
+              ports:
+                - containerPort: 8000
+                  protocol: UDP
+              env:
+                - name: ENVIRONMENT
+                  value: production
+                - name: APP_SERVER__HOST
+                  value: "127.0.0.1"
+                - name: APP_SERVER__PORT
+                  value: "8000"
+                - name: APP_SERVER__NETCODE_PRIVATE_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: netcode-secret
+                      key: private-key
+                - name: APP_DATABASE__PORT
+                  value: "5432"
+                - name: APP_DATABASE__DB_NAME
+                  value: "mmo"
+                - name: APP_DATABASE__HOST
+                  value: "postgres-main-rw"
+                - name: APP_DATABASE__USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: pg-secret
+                      key: username
+                - name: APP_DATABASE__PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: pg-secret
+                      key: password
