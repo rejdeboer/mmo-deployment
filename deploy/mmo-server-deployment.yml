@@ -16,6 +16,10 @@ spec:
         # TODO: Do we need this?
         realm: main
     spec:
+      ports:
+      - name: default
+        protocol: UDP
+        containerPort: 8000
       template:
         spec:
           containers:
