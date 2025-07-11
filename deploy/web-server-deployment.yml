@@ -26,6 +26,7 @@ spec:
       labels:
         app: web-server
     spec:
+      serviceAccountName: web-server-sa
       containers:
         - name: web-server
           image: rejdeboer/web-server:latest
@@ -75,3 +76,33 @@ spec:
                 secretKeyRef:
                   name: netcode-secret
                   key: private-key
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web-server-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: service-reader-role
+  namespace: default
+rules:
+- apiGroups: [""] 
+  resources: ["gameservers"]
+  verbs: ["get", "list"] 
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: web-server-can-read-gameservers
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: web-server-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: service-reader-role
+  apiGroup: rbac.authorization.k8s.io
