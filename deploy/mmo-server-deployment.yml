@@ -1,3 +1,5 @@
+# TODO: I'm not sure if agones is the right tool for this mmo
+# Might need to refactor to using statefulsets later
 apiVersion: agones.dev/v1
 kind: Fleet
 metadata:
