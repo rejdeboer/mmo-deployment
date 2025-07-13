@@ -51,6 +51,11 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: signing-key
+            - name: APP_APPLICATION__NETCODE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: netcode-secret
+                  key: private-key
             - name: APP_DATABASE__PORT
               value: "5432"
             - name: APP_DATABASE__DB_NAME
@@ -67,15 +72,6 @@ spec:
                 secretKeyRef:
                   name: pg-secret
                   key: password
-            - name: APP_GAME_SERVER__HOST
-              # TODO: Won't work
-              value: "mmo-server"
-            - name: APP_GAME_SERVER__NETCODE_PRIVATE_KEY
-              # TODO: Won't work
-              valueFrom:
-                secretKeyRef:
-                  name: netcode-secret
-                  key: private-key
 ---
 apiVersion: v1
 kind: ServiceAccount
