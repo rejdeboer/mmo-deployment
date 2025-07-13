@@ -43,7 +43,7 @@ spec:
             - name: ENVIRONMENT
               value: production
             - name: APP_APPLICATION__HOST
-              value: "127.0.0.1"
+              value: "0.0.0.0"
             - name: APP_APPLICATION__PORT
               value: "8000"
             - name: APP_APPLICATION__JWT_SIGNING_KEY
