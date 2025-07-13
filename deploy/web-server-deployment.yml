@@ -85,7 +85,7 @@ metadata:
   name: service-reader-role
   namespace: default
 rules:
-- apiGroups: [""] 
+- apiGroups: ["agones.dev"] 
   resources: ["gameservers"]
   verbs: ["get", "list"] 
 ---
