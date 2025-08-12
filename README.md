@@ -7,7 +7,7 @@ This repository contains all the Kubernetes manifests and Terraform configuratio
 This project follows a **hybrid architecture** that combines the stability of traditional persistent-world servers with the elasticity of modern, cloud-native session-based servers.
 
 *   **Persistent Worlds (StatefulSets):** Core, long-running game worlds (e.g., continents, "realms") are managed as Kubernetes `StatefulSets`. This provides them with stable network identities and persistent storage, which is crucial for a classic MMO feel where the world feels permanent and always-on.
-*   **Instanced Content (Agones - Future):** On-demand, session-based content like dungeons, raids, or battlegrounds will be managed by [Agones](https://agones.dev/). This allows us to dynamically scale resources up and down based on player demand, saving significant cost and resources. (Note: Currently planned, not yet implemented).
+*   **Instanced Content (Agones):** On-demand, session-based content like dungeons, raids, or battlegrounds will be managed by [Agones](https://agones.dev/). This allows us to dynamically scale resources up and down based on player demand, saving significant cost and resources. (Note: Currently planned, not yet implemented).
 *   **Web Server as Connect Broker:** The web server is the single entry point for players. It handles authentication and, critically, acts as a "connect broker." It queries the Kubernetes API to discover the correct game server address and generates a time-limited `netcode.io` connect token, ensuring secure and managed connections.
 
 ## Core Technologies
