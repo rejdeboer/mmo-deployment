@@ -4,6 +4,8 @@ metadata:
   name: pre-deploy
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: infrastructure-configs
   interval: 60m0s
   sourceRef:
     kind: GitRepository
