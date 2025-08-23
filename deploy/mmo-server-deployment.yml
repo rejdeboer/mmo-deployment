@@ -18,6 +18,7 @@ spec:
         # TODO: Do we need this?
         realm: main
     spec:
+      container: mmo-server
       ports:
       - name: default
         protocol: UDP
