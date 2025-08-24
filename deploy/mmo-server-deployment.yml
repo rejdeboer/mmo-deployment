@@ -99,25 +99,28 @@ metadata:
     app: mmo-server-metrics
 spec:
   selector:
-    agones.dev/fleet: mmo-server
+    app: mmo-server
   ports:
     - name: http-metrics
       protocol: TCP
       port: 80
-      targetPort: 800
+      targetPort: 80
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: mmo-server-metrics
-  namespace: default 
+  namespace: monitoring 
   labels:
     release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
-      app: mmo-server-metrics 
+      agones.dev/fleet: mmo-server
+  namespaceSelector:
+    matchNames:
+    - default
   endpoints:
-  - port: http-metrics 
-    path: /game.prom   
-    interval: 15s      
+  - port: http-metrics
+    path: /game.prom
+    interval: 15s
