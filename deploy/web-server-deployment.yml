@@ -5,7 +5,8 @@ metadata:
   namespace: default
 spec:
   ports:
-    - port: 80
+    - name: web-server
+      port: 80
       targetPort: 8000
       protocol: TCP
   selector:
@@ -102,3 +103,22 @@ roleRef:
   kind: Role
   name: service-reader-role
   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: web-server
+  namespace: monitoring 
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: web-server
+  namespaceSelector:
+    matchNames:
+    - default
+  endpoints:
+  - port: web-server
+    path: /metrics
+    interval: 15s
