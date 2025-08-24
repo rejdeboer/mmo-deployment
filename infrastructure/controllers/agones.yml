@@ -31,3 +31,8 @@ spec:
         namespace: flux-system
       interval: 12h
   targetNamespace: agones-system
+  values:
+    agones:
+      metrics:
+        serviceMonitor:
+          enabled: true
