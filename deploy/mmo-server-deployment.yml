@@ -99,7 +99,7 @@ metadata:
     app: mmo-server-metrics
 spec:
   selector:
-    app: mmo-server
+    agones.dev/fleet: mmo-server
   ports:
     - name: http-metrics
       protocol: TCP
@@ -116,7 +116,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      agones.dev/fleet: mmo-server
+      app: mmo-server
   namespaceSelector:
     matchNames:
     - default

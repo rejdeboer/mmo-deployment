@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: web-server
   namespace: default
+  labels:
+    app: web-server
 spec:
   ports:
     - name: web-server
