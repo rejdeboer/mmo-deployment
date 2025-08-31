@@ -4,26 +4,25 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-type RealmSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
+type ZoneSpec struct {
 	// +required
-	Image *string `json:"image,omitempty"`
+	Name *string `json:"name"`
 }
 
-// RealmStatus defines the observed state of Realm.
-type RealmStatus struct {
+type ZoneSetSpec struct {
+	// +required
+	Zones []ZoneSpec `json:"zones"`
+}
+
+// ZoneSetStatus defines the observed state of ZoneSet.
+type ZoneSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the Realm resource.
+	// conditions represent the current state of the ZoneSet resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -41,32 +40,32 @@ type RealmStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// Realm is the Schema for the realms API
-type Realm struct {
+// ZoneSet is the Schema for the zonesets API
+type ZoneSet struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of Realm
+	// spec defines the desired state of ZoneSet
 	// +required
-	Spec RealmSpec `json:"spec"`
+	Spec ZoneSetSpec `json:"spec"`
 
-	// status defines the observed state of Realm
+	// status defines the observed state of ZoneSet
 	// +optional
-	Status RealmStatus `json:"status,omitempty,omitzero"`
+	Status ZoneSetStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// RealmList contains a list of Realm
-type RealmList struct {
+// ZoneSetList contains a list of ZoneSet
+type ZoneSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Realm `json:"items"`
+	Items           []ZoneSet `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Realm{}, &RealmList{})
+	SchemeBuilder.Register(&ZoneSet{}, &ZoneSetList{})
 }

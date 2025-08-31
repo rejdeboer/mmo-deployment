@@ -22,6 +22,9 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the realm itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- zoneset_admin_role.yaml
+- zoneset_editor_role.yaml
+- zoneset_viewer_role.yaml
 - realm_admin_role.yaml
 - realm_editor_role.yaml
 - realm_viewer_role.yaml
