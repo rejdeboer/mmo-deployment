@@ -8,4 +8,14 @@ layout:
 - go.kubebuilder.io/v4
 projectName: realm
 repo: github.com/rejdeboer/mmo-deployment
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: rejdeboer.com
+  group: mmo
+  kind: Realm
+  path: github.com/rejdeboer/mmo-deployment/api/v1alpha1
+  version: v1alpha1
 version: "3"

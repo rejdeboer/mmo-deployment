@@ -1,0 +1,9 @@
+apiVersion: mmo.rejdeboer.com/v1alpha1
+kind: Realm
+metadata:
+  labels:
+    app.kubernetes.io/name: realm
+    app.kubernetes.io/managed-by: kustomize
+  name: realm-sample
+spec:
+  # TODO(user): Add fields here

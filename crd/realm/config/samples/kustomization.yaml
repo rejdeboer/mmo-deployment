@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- mmo_v1alpha1_realm.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
