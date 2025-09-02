@@ -13,6 +13,8 @@ type RealmSpec struct {
 
 	// +required
 	Image *string `json:"image,omitempty"`
+	// +required
+	ZoneSetRef *string `json:"zoneSetRef"`
 }
 
 // RealmStatus defines the observed state of Realm.
