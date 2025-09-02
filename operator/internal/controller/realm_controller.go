@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"maps"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -65,6 +66,9 @@ func (r *RealmReconciler) reconcileStatefulSet(ctx context.Context, realm *mmov1
 	}
 
 	replicas := int32(len(zoneSet.Spec.Zones))
+	realmLabels := map[string]string{realmOwnerLabel: realm.Name}
+	template := realm.Spec.Template
+	maps.Copy(template.ObjectMeta.Labels, realmLabels)
 
 	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, sts, func() error {
 		sts.Spec = appsv1.StatefulSetSpec{
@@ -73,16 +77,7 @@ func (r *RealmReconciler) reconcileStatefulSet(ctx context.Context, realm *mmov1
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{realmOwnerLabel: realm.Name},
 			},
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{realmOwnerLabel: realm.Name},
-				},
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{corev1.Container{
-						Image: *realm.Spec.Image,
-					}},
-				},
-			},
+			Template: template,
 		}
 		return controllerutil.SetControllerReference(realm, sts, r.Scheme)
 	})
