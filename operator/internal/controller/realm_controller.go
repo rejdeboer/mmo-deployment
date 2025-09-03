@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -9,6 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -33,7 +35,6 @@ type RealmReconciler struct {
 //+kubebuilder:rbac:groups=mmo.yourcompany.com,resources=realms/finalizers,verbs=update
 //+kubebuilder:rbac:groups=mmo.yourcompany.com,resources=zonesets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;update;patch
 
@@ -85,10 +86,45 @@ func (r *RealmReconciler) reconcileStatefulSet(ctx context.Context, realm *mmov1
 	return err
 }
 
-// SetupWithManager sets up the controller with the Manager.
+func (r *RealmReconciler) reconcileServices(ctx context.Context, realm *mmov1alpha1.Realm, zoneSet *mmov1alpha1.ZoneSet) error {
+	for i := 0; i < len(zoneSet.Spec.Zones); i++ {
+		podName := fmt.Sprintf("%s-%d", realm.Name, i)
+		svc := &corev1.Service{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      podName,
+				Namespace: realm.Namespace,
+			},
+		}
+
+		_, err := controllerutil.CreateOrUpdate(ctx, r.Client, svc, func() error {
+			svc.Spec = corev1.ServiceSpec{
+				Type: corev1.ServiceTypeNodePort,
+				Selector: map[string]string{
+					"statefulset.kubernetes.io/pod-name": podName,
+				},
+				Ports: []corev1.ServicePort{
+					{
+						Port:       7777,
+						TargetPort: intstr.FromInt(7777),
+						NodePort:   0,
+					},
+				},
+			}
+			return controllerutil.SetControllerReference(realm, svc, r.Scheme)
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r *RealmReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&mmov1alpha1.Realm{}).
+		Owns(&appsv1.StatefulSet{}).
+		Owns(&corev1.Service{}).
 		Named("realm").
 		Complete(r)
 }
