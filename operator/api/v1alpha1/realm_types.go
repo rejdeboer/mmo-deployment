@@ -13,7 +13,7 @@ type RealmSpec struct {
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
 	// +required
-	Image *string `json:"image,omitempty"`
+	ContainerPort int32 `json:"containerPort,omitempty"`
 	// +required
 	ZoneSetRef *string `json:"zoneSetRef"`
 	// +required

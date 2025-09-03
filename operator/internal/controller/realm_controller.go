@@ -55,6 +55,16 @@ func (r *RealmReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
+	if err := r.reconcileStatefulSet(ctx, &realm, &zoneSet); err != nil {
+		log.Error(err, "failed to reconcile StatefulSet")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
+	if err := r.reconcileServices(ctx, &realm, &zoneSet); err != nil {
+		log.Error(err, "failed to reconcile Services")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
 	return ctrl.Result{}, nil
 }
 
@@ -104,8 +114,8 @@ func (r *RealmReconciler) reconcileServices(ctx context.Context, realm *mmov1alp
 				},
 				Ports: []corev1.ServicePort{
 					{
-						Port:       7777,
-						TargetPort: intstr.FromInt(7777),
+						Port:       realm.Spec.ContainerPort,
+						TargetPort: intstr.FromInt32(realm.Spec.ContainerPort),
 						NodePort:   0,
 					},
 				},
