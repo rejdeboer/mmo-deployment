@@ -57,12 +57,12 @@ func (r *RealmReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	if err := r.reconcileStatefulSet(ctx, &realm, &zoneSet); err != nil {
 		log.Error(err, "failed to reconcile StatefulSet")
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		return ctrl.Result{}, err
 	}
 
 	if err := r.reconcileServices(ctx, &realm, &zoneSet); err != nil {
 		log.Error(err, "failed to reconcile Services")
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		return ctrl.Result{}, err
 	}
 
 	return ctrl.Result{}, nil
