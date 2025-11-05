@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-server-config
+data:
+  ENVIRONMENT: production
+  APP_SERVER__HOST: "0.0.0.0"
+  APP_SERVER__PORT: "8000"
+  APP_SERVER__METRICS_PATH: /metrics/game.prom

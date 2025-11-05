@@ -41,20 +41,15 @@ spec:
               volumeMounts:
               - name: metrics
                 mountPath: /metrics
+              envFrom:
+              - configMapRef:
+                name: game-server-config
               env:
-                - name: ENVIRONMENT
-                  value: production
-                - name: APP_SERVER__HOST
-                  value: "0.0.0.0"
-                - name: APP_SERVER__PORT
-                  value: "8000"
                 - name: APP_SERVER__NETCODE_PRIVATE_KEY
                   valueFrom:
                     secretKeyRef:
                       name: netcode-secret
                       key: private-key
-                - name: APP_SERVER__METRICS_PATH
-                  value: /metrics/game.prom
                 - name: APP_DATABASE__PORT
                   value: "5432"
                 - name: APP_DATABASE__DB_NAME
