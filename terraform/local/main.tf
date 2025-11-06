@@ -24,6 +24,6 @@ provider "azurerm" {
 }
 
 provider "proxmox" {
-  endpoint = "https://192.168.0.112:8006/api2/json"
+  endpoint = "https://192.168.178.153:8006/api2/json"
   insecure = true
 }

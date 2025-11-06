@@ -63,7 +63,7 @@ spec:
             - --registry=noop
             - --policy=upsert-only
             - --pihole-api-version=6
-            - --pihole-server=http://192.168.0.53
+            - --pihole-server=http://192.168.178.53
             # - --domain-filter=rejdeboer.com
             # - --cloudflare-proxied
             # - --txt-prefix=externaldns-
