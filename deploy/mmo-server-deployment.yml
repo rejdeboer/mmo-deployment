@@ -24,6 +24,9 @@ spec:
         protocol: UDP
         containerPort: 8000
       template:
+        metadata:
+          labels:
+            app: mmo-server
         spec:
           containers:
             - name: mmo-server
@@ -94,7 +97,7 @@ metadata:
     app: mmo-server-metrics
 spec:
   selector:
-    agones.dev/fleet: mmo-server
+    app: mmo-server
   ports:
     - name: http-metrics
       protocol: TCP
@@ -111,7 +114,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: mmo-server
+      app: mmo-server-metrics
   namespaceSelector:
     matchNames:
     - default
