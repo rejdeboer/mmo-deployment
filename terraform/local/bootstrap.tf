@@ -3,6 +3,10 @@ resource "null_resource" "flux_bootstrap" {
     proxmox_virtual_environment_vm.k3s_master_01,
   ]
 
+  triggers = {
+    vm_id = proxmox_virtual_environment_vm.k3s_master_01.id
+  }
+
   provisioner "local-exec" {
     command = <<-EOT
       ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
