@@ -43,7 +43,7 @@ spec:
                 mountPath: /metrics
               envFrom:
               - configMapRef:
-                name: game-server-config
+                  name: game-server-config
               env:
                 - name: APP_SERVER__NETCODE_PRIVATE_KEY
                   valueFrom:
