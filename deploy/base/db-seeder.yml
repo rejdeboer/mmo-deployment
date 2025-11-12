@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-seeder
+  namespace: default
+  labels:
+    app: db-seeder
+spec:
+  ports:
+    - name: db-seeder
+      port: 80
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: db-seeder
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-seeder
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-seeder
+  template:
+    metadata:
+      labels:
+        app: db-seeder
+    spec:
+      containers:
+        - name: db-seeder
+          image: rejdeboer/mmo-db-seeder:latest
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "mmo"
+            - name: DB_HOST
+              value: "postgres-main-rw"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: password
+          command: ["db-seeder"]
+          args: ["server", "--url", "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"]
