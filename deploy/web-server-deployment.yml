@@ -43,6 +43,8 @@ spec:
           ports:
             - containerPort: 8000
           env:
+            - name: RUST_LOG
+              value: "INFO"
             - name: ENVIRONMENT
               value: production
             - name: APP_APPLICATION__HOST
