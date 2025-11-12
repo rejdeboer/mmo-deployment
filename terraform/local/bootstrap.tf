@@ -26,7 +26,7 @@ resource "null_resource" "flux_bootstrap" {
       --owner=rejdeboer \
       --repository=mmo-deployment \
       --branch=main \
-      --path=./clusters/production \
+      --path=./clusters/staging \
       --personal
     EOT
 
