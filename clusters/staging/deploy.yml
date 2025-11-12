@@ -10,15 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./deploy
+  path: ./deploy/staging
   prune: true
   wait: true
   timeout: 5m0s
-  patches:
-    - patch: |
-        - op: replace
-          path: /data/ENVIRONMENT
-          value: staging
-      target:
-        kind: ConfigMap
-        name: game-server-config
