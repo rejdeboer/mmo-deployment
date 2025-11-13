@@ -9,7 +9,7 @@ spec:
   ports:
     - name: db-seeder
       port: 80
-      targetPort: 8000
+      targetPort: 8032
       protocol: TCP
   selector:
     app: db-seeder
@@ -40,23 +40,21 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           ports:
-            - containerPort: 8000
+            - containerPort: 8032
           env:
-            - name: DB_PORT
+            - name: SEEDER_DATABASE_PORT
               value: "5432"
-            - name: DB_NAME
+            - name: SEEDER_DATABASE_NAME
               value: "mmo"
-            - name: DB_HOST
+            - name: SEEDER_DATABASE_HOST
               value: "postgres-main-rw"
-            - name: DB_USERNAME
+            - name: SEEDER_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: username
-            - name: DB_PASSWORD
+            - name: SEEDER_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: password
-          command: ["db-seeder"]
-          args: ["server", "--url", "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"]
