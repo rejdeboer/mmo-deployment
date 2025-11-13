@@ -1,4 +1,4 @@
-resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
+resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
   content_type = "snippets"
   datastore_id = "local"
   node_name    = "host1"
@@ -30,6 +30,40 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
       - echo "done" > /tmp/cloud-config.done
     EOF
 
-    file_name = "user-data-cloud-config.yaml"
+    file_name = "k3s-cloud-config.yaml"
+  }
+}
+
+resource "proxmox_virtual_environment_file" "minio_cloud_config" {
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = "host1"
+
+  source_raw {
+    data = <<-EOF
+    #cloud-config
+    hostname: host1
+    timezone: Europe/Amsterdam
+    users:
+      - default
+      - name: debian
+        groups:
+          - sudo
+        shell: /bin/bash
+        ssh_authorized_keys:
+%{for key in var.ssh_public_keys~}
+          - ${key}
+%{endfor~}
+        sudo: ALL=(ALL) NOPASSWD:ALL
+    package_update: true
+    packages:
+      - qemu-guest-agent
+    runcmd:
+      - systemctl enable qemu-guest-agent
+      - systemctl start qemu-guest-agent
+      - echo "done" > /tmp/cloud-config.done
+    EOF
+
+    file_name = "minio-cloud-config.yaml"
   }
 }
