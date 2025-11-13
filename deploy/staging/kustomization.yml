@@ -10,7 +10,7 @@ resources:
   - ../base/secrets.yml
   - ../base/web-server-deployment.yml
 patches:
-- path: patches/game-server-config-patch.yaml
+- path: patches/game-server-config-patch.yml
   target:
     kind: ConfigMap
     name: game-server-config
