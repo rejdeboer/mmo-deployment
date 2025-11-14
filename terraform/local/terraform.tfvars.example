@@ -4,3 +4,4 @@ ssh_public_keys = [
 ]
 github_token         = "*********"
 ssh_private_key_path = "~/.ssh/id_rsa"
+minio_password = "*****"
