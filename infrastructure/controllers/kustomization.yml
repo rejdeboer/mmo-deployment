@@ -9,3 +9,4 @@ resources:
   # TODO: Once we gain more resource, we can use longhorn for HA
   # - longhorn.yml
   - sealed-secrets.yml
+  - tempo.yml
