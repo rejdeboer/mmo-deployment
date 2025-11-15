@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: db-seeder
-          image: rejdeboer/mmo-db-seeder:latest
+          image: rejdeboer/mmo-db-seeder:5900268e834d35a751605efe27964957a33d1180
           resources:
             requests:
               memory: "256Mi"
