@@ -57,7 +57,7 @@ spec:
                       key: private-key
                 - name: APP_DATABASE__PORT
                   value: "5432"
-                - name: APP_DATABASE__DB_NAME
+                - name: APP_DATABASE__NAME
                   value: "mmo"
                 - name: APP_DATABASE__HOST
                   value: "postgres-main-rw"
