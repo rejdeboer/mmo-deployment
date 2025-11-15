@@ -9,4 +9,4 @@ spec:
         spec:
           containers:
             - name: mmo-server
-              image: rejdeboer/mmo-server:latest
+              image: mmo-server:9b3eb1dc3ef759c12eb58bdde3c77c0cb0ed17f0
