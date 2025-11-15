@@ -14,3 +14,11 @@ patches:
   target:
     kind: ConfigMap
     name: game-server-config
+- path: patches/mmo-server-deployment-patch.yml
+  target:
+    kind: Fleet
+    name: mmo-server
+- path: patches/web-server-deployment-patch.yml
+  target:
+    kind: Deployment
+    name: web-server

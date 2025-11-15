@@ -1,0 +1,12 @@
+apiVersion: agones.dev/v1
+kind: Fleet
+metadata:
+  name: mmo-server
+spec:
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mmo-server
+              image: rejdeboer/mmo-server:latest

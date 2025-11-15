@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  template:
+    spec:
+      containers:
+        - name: web-server
+          image: rejdeboer/web-server:latest
