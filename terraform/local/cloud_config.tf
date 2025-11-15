@@ -88,7 +88,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
 
         services:
           minio:
-            image: minio/minio:latest
+            image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
             ports:
               - "9001:9001"
               - "9000:9000"

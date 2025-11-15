@@ -44,7 +44,7 @@ spec:
           env:
             - name: SEEDER_DATABASE_PORT
               value: "5432"
-            - name: SEEDER_DATABASE_NAME
+            - name: SEEDER_DATABASE_DB_NAME
               value: "mmo"
             - name: SEEDER_DATABASE_HOST
               value: "postgres-main-rw"
