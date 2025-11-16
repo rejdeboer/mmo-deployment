@@ -28,6 +28,7 @@ resource "null_resource" "flux_bootstrap" {
       --repository=mmo-deployment \
       --branch=main \
       --path=./clusters/staging \
+      --read-write-key
       --personal
     EOT
 
