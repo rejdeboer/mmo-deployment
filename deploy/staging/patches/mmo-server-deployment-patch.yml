@@ -9,4 +9,4 @@ spec:
         spec:
           containers:
             - name: mmo-server
-              image: mmo-server:main-74bc879-1763324843  # {"$imagepolicy": "flux-system:mmo-server"}
+              image: rejdeboer/mmo-server:main-74bc879-1763324843 # {"$imagepolicy": "flux-system:mmo-server"}
