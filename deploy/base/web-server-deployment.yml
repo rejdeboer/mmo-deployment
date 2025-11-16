@@ -32,7 +32,7 @@ spec:
       serviceAccountName: web-server-sa
       containers:
         - name: web-server
-          image: rejdeboer/web-server:main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server"}
+          image: rejdeboer/web-server:main-74bc879-1763325478 
           resources:
             requests:
               memory: "256Mi"

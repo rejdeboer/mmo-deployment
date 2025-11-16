@@ -7,4 +7,4 @@ spec:
     spec:
       containers:
         - name: web-server
-          image: web-server:9b3eb1dc3ef759c12eb58bdde3c77c0cb0ed17f0
+          image: web-server:main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server"}
