@@ -10,14 +10,14 @@ resources:
   - ../base/secrets.yml
   - ../base/web-server-deployment.yml
 patches:
-- path: patches/game-server-config-patch.yml
-  target:
-    kind: ConfigMap
-    name: game-server-config
+  - path: patches/game-server-config-patch.yml
+    target:
+      kind: ConfigMap
+      name: game-server-config
 images:
-- name: rejdeboer/mmo-server
-  newName: rejdeboer/mmo-server # {"$imagepolicy": "flux-system:mmo-server:name"}
-  newTag: mmo-server:main-74bc879-1763324843 # {"$imagepolicy": "flux-system:mmo-server:tag"}
-- name: rejdeboer/web-server
-  newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
-  newTag: web-server:main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server:tag"}
+  - name: rejdeboer/mmo-server
+    newName: rejdeboer/mmo-server # {"$imagepolicy": "flux-system:mmo-server:name"}
+    newTag: main-74bc879-1763324843 # {"$imagepolicy": "flux-system:mmo-server:tag"}
+  - name: rejdeboer/web-server
+    newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
+    newTag: main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server:tag"}
