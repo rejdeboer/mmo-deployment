@@ -1,0 +1,59 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: db-migration
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: db-migration
+  filterTags:
+    pattern: '^main-[a-fA-F0-9]+-(?P<ts>.*)'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: db-seeder
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: db-seeder
+  filterTags:
+    pattern: '^main-[a-fA-F0-9]+-(?P<ts>.*)'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: mmo-server
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: mmo-server
+  filterTags:
+    pattern: '^main-[a-fA-F0-9]+-(?P<ts>.*)'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: web-server
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: web-server
+  filterTags:
+    pattern: '^main-[a-fA-F0-9]+-(?P<ts>.*)'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc

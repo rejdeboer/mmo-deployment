@@ -30,7 +30,7 @@ spec:
         spec:
           containers:
             - name: mmo-server
-              image: rejdeboer/mmo-server:latest
+              image: rejdeboer/mmo-server:latest # {"$imagepolicy": "flux-system:mmo-server"}
               resources:
                 requests:
                   memory: "256Mi"

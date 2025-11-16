@@ -1,0 +1,36 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: db-migration
+  namespace: flux-system
+spec:
+  image: rejdeboer/mmo-db-migration
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: db-seeder 
+  namespace: flux-system
+spec:
+  image: rejdeboer/mmo-db-seeder
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: mmo-server
+  namespace: flux-system
+spec:
+  image: rejdeboer/mmo-server
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: web-server
+  namespace: flux-system
+spec:
+  image: rejdeboer/web-server
+  interval: 5m0s
+
