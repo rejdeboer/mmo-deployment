@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - image-policy.yml
   - image-registry.yml
+  - image-update-automation.yml
   - migration.job.yml
