@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: db-seeder
-          image: rejdeboer/mmo-db-seeder:latest # {"$imagepolicy": "flux-system:db-seeder"}
+          image: rejdeboer/mmo-db-seeder:main-74bc879-1763324722 # {"$imagepolicy": "flux-system:db-seeder"}
           resources:
             requests:
               memory: "256Mi"
@@ -71,10 +71,9 @@ spec:
   - match: Host(`db-seeder.homelab.io`)
     kind: Rule
     services:
-    - name: db-seeder 
+    - name: db-seeder
       port: 80
   # tls:
   #   certResolver: letsencrypt 
   #   domains:
   #   - main: "db-seeder.homelab.io"
-

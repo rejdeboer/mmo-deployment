@@ -32,7 +32,7 @@ spec:
       serviceAccountName: web-server-sa
       containers:
         - name: web-server
-          image: rejdeboer/web-server:latest # {"$imagepolicy": "flux-system:web-server"}
+          image: rejdeboer/web-server:main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server"}
           resources:
             requests:
               memory: "256Mi"
@@ -90,9 +90,9 @@ metadata:
   name: service-reader-role
   namespace: default
 rules:
-- apiGroups: ["agones.dev"] 
+- apiGroups: ["agones.dev"]
   resources: ["gameservers"]
-  verbs: ["get", "list"] 
+  verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -112,7 +112,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: web-server
-  namespace: monitoring 
+  namespace: monitoring
   labels:
     release: kube-prometheus-stack
 spec:
