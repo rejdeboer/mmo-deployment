@@ -14,11 +14,10 @@ patches:
   target:
     kind: ConfigMap
     name: game-server-config
-- path: patches/mmo-server-deployment-patch.yml
-  target:
-    kind: Fleet
-    name: mmo-server
-- path: patches/web-server-deployment-patch.yml
-  target:
-    kind: Deployment
-    name: web-server
+images:
+- name: rejdeboer/mmo-server
+  newName: rejdeboer/mmo-server # {"$imagepolicy": "flux-system:mmo-server:name"}
+  newTag: mmo-server:main-74bc879-1763324843 # {"$imagepolicy": "flux-system:mmo-server:tag"}
+- name: rejdeboer/web-server
+  newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
+  newTag: web-server:main-74bc879-1763325478 # {"$imagepolicy": "flux-system:web-server:tag"}
