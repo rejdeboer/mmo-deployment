@@ -9,25 +9,25 @@ spec:
       restartPolicy: Never
       containers:
       - name: migration
-        image: rejdeboer/mmo-db-migration:latest # {"$imagepolicy": "flux-system:db-migration"}
+        image: rejdeboer/mmo-db-migration:main-74bc879-1763326654 # {"$imagepolicy": "flux-system:db-migration"}
         env:
-          - name: DB_HOST
-            value: postgres-main-rw
-          - name: DB_PORT
-            value: "5432"
-          - name: DB_NAME
-            value: mmo
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: pg-secret
-                key: username
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: pg-secret
-                key: password
+        - name: DB_HOST
+          value: postgres-main-rw
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: mmo
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-secret
+              key: password
         command: ["/bin/sh", "-c"]
         args:
-          - |
-            sqlx migrate run --database-url="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?sslmode=disable"
+        - |
+          sqlx migrate run --database-url="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?sslmode=disable"
