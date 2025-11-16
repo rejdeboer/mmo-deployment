@@ -23,6 +23,7 @@ resource "null_resource" "flux_bootstrap" {
       kubectl apply -f ${var.master_key_manifest_path}
 
       flux bootstrap github \
+      --components-extra=image-reflector-controller,image-automation-controller \
       --owner=rejdeboer \
       --repository=mmo-deployment \
       --branch=main \
