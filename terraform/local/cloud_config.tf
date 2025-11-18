@@ -97,7 +97,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
             environment:
               # IMPORTANT: Terraform variables are expanded here.
               - MINIO_ROOT_USER=${var.minio_user}
-              - MINIO_ROOT_PASSWORD=${var.minio_password}
+              - MINIO_ROOT_PASSWORD=${var.master_password}
             command: server /data --console-address ":9001"
             restart: unless-stopped
         DOCKER_COMPOSE_EOF

@@ -22,7 +22,7 @@ variable "minio_user" {
   default = "minio"
 }
 
-variable "minio_password" {
+variable "master_password" {
   type      = string
   sensitive = true
 }
