@@ -10,10 +10,10 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
-  name: db-seeder 
+  name: mmo-provisioner 
   namespace: flux-system
 spec:
-  image: rejdeboer/mmo-db-seeder
+  image: rejdeboer/mmo-provisioner
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1

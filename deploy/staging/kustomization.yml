@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base/assets-config.yml
-  - ../base/db-seeder.yml
   - ../base/external-dns.yml
   - ../base/game-server-config.yml
   - ../base/ingress.yml
   - ../base/mmo-server-deployment.yml
+  - ../base/provisioner.yml
   - ../base/secrets.yml
   - ../base/web-server-deployment.yml
 patches:

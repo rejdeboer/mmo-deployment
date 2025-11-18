@@ -1,37 +1,37 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: db-seeder
+  name: mmo-provisioner
   namespace: default
   labels:
-    app: db-seeder
+    app: mmo-provisioner
 spec:
   ports:
-    - name: db-seeder
+    - name: mmo-provisioner
       port: 80
       targetPort: 8032
       protocol: TCP
   selector:
-    app: db-seeder
+    app: mmo-provisioner
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-seeder
+  name: mmo-provisioner
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db-seeder
+      app: mmo-provisioner
   template:
     metadata:
       labels:
-        app: db-seeder
+        app: mmo-provisioner
     spec:
       containers:
-        - name: db-seeder
-          image: rejdeboer/mmo-db-seeder:main-74bc879-1763324722 # {"$imagepolicy": "flux-system:db-seeder"}
+        - name: mmo-provisioner
+          image: rejdeboer/mmo-provisioner:main-74bc879-1763324722 # {"$imagepolicy": "flux-system:mmo-provisioner"}
           resources:
             requests:
               memory: "256Mi"
@@ -42,38 +42,43 @@ spec:
           ports:
             - containerPort: 8032
           env:
-            - name: SEEDER_DATABASE_PORT
+            - name: DATABASE_PORT
               value: "5432"
-            - name: SEEDER_DATABASE_NAME
+            - name: DATABASE_NAME
               value: "mmo"
-            - name: SEEDER_DATABASE_HOST
+            - name: DATABASE_HOST
               value: "postgres-main-rw"
-            - name: SEEDER_DATABASE_USERNAME
+            - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: username
-            - name: SEEDER_DATABASE_PASSWORD
+            - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: password
+            - name: SERVER_NETCODE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: netcode-secret
+                  key: private-key
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: db-seeder
+  name: mmo-provisioner
   namespace: default
 spec:
   # entryPoints:
   #   - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
   routes:
-  - match: Host(`db-seeder.homelab.io`)
+  - match: Host(`mmo-provisioner.homelab.io`)
     kind: Rule
     services:
-    - name: db-seeder
+    - name: mmo-provisioner
       port: 80
   # tls:
   #   certResolver: letsencrypt 
   #   domains:
-  #   - main: "db-seeder.homelab.io"
+  #   - main: "mmo-provisioner.homelab.io"

@@ -16,11 +16,11 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImagePolicy
 metadata:
-  name: db-seeder
+  name: mmo-provisioner
   namespace: flux-system
 spec:
   imageRepositoryRef:
-    name: db-seeder
+    name: mmo-provisioner
   filterTags:
     pattern: '^main-[a-fA-F0-9]+-(?P<ts>.*)'
     extract: '$ts'
