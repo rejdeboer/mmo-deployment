@@ -1,12 +1,12 @@
 resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
   content_type = "snippets"
   datastore_id = "local"
-  node_name    = "host1"
+  node_name    = "host2"
 
   source_raw {
     data = <<-EOF
     #cloud-config
-    hostname: host1
+    hostname: host2
     timezone: Europe/Amsterdam
     users:
       - default
@@ -26,7 +26,7 @@ resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
-      - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -s - server --bind-address 192.168.178.50
+      - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -s - server --bind-address 192.168.1.50
       - echo "done" > /tmp/cloud-config.done
     EOF
 
@@ -37,12 +37,12 @@ resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
 resource "proxmox_virtual_environment_file" "minio_cloud_config" {
   content_type = "snippets"
   datastore_id = "local"
-  node_name    = "host1"
+  node_name    = "host2"
 
   source_raw {
     data = <<-EOF
     #cloud-config
-    hostname: host1
+    hostname: host2
     timezone: Europe/Amsterdam
     users:
       - default

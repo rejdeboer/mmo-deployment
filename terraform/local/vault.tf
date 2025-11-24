@@ -1,5 +1,5 @@
 resource "proxmox_virtual_environment_container" "vault" {
-  node_name = "host1"
+  node_name = "host2"
 
   unprivileged = true
   features {
@@ -56,7 +56,7 @@ resource "proxmox_virtual_environment_container" "vault" {
 resource "proxmox_virtual_environment_download_file" "ubuntu_2504_lxc_img" {
   content_type = "vztmpl"
   datastore_id = "local"
-  node_name    = "host1"
+  node_name    = "host2"
   url          = "https://mirrors.servercentral.com/ubuntu-cloud-images/releases/25.04/release/ubuntu-25.04-server-cloudimg-amd64-root.tar.xz"
 }
 

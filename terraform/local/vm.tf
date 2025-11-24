@@ -1,7 +1,7 @@
 resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
   content_type = "iso"
   datastore_id = "local"
-  node_name    = "host1"
+  node_name    = "host2"
 
   url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 }
@@ -10,7 +10,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   name        = "k3s-master-01"
   description = "Managed by Terraform"
   tags        = ["terraform"]
-  node_name   = "host1"
+  node_name   = "host2"
 
   cpu {
     cores = 4
@@ -68,7 +68,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
 resource "proxmox_virtual_environment_download_file" "debian_cloud_image" {
   content_type = "import"
   datastore_id = "local"
-  node_name    = "host1"
+  node_name    = "host2"
 
   url = "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
 }
@@ -77,7 +77,7 @@ resource "proxmox_virtual_environment_vm" "minio" {
   name        = "minio"
   description = "Managed by Terraform"
   tags        = ["terraform"]
-  node_name   = "host1"
+  node_name   = "host2"
 
   cpu {
     cores = 2
