@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: mmo-provisioner
-          image: rejdeboer/mmo-provisioner:main-74bc879-1763324722 # {"$imagepolicy": "flux-system:mmo-provisioner"}
+          image: rejdeboer/mmo-provisioner:main-6678488-1763676655 # {"$imagepolicy": "flux-system:mmo-provisioner"}
           resources:
             requests:
               memory: "256Mi"
