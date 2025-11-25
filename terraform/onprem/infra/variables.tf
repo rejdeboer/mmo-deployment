@@ -17,12 +17,12 @@ variable "master_key_manifest_path" {
   default = "~/tmp/sealed-secrets-key.yml"
 }
 
-variable "minio_user" {
+variable "minio_root_user" {
   type    = string
   default = "minio"
 }
 
-variable "master_password" {
+variable "minio_root_password" {
   type      = string
   sensitive = true
 }
