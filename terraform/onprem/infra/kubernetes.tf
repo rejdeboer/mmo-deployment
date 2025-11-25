@@ -57,6 +57,42 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   }
 }
 
+resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = "host2"
+
+  source_raw {
+    data = <<-EOF
+    #cloud-config
+    hostname: host2
+    timezone: Europe/Amsterdam
+    users:
+      - default
+      - name: ubuntu
+        groups:
+          - sudo
+        shell: /bin/bash
+        ssh_authorized_keys:
+%{for key in var.ssh_public_keys~}
+          - ${key}
+%{endfor~}
+        sudo: ALL=(ALL) NOPASSWD:ALL
+    package_update: true
+    packages:
+      - qemu-guest-agent
+      - curl
+    runcmd:
+      - systemctl enable qemu-guest-agent
+      - systemctl start qemu-guest-agent
+      - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -s - server --bind-address 192.168.1.50
+      - echo "done" > /tmp/cloud-config.done
+    EOF
+
+    file_name = "k3s-cloud-config.yaml"
+  }
+}
+
 resource "null_resource" "flux_bootstrap" {
   depends_on = [
     proxmox_virtual_environment_vm.k3s_master_01,
@@ -97,38 +133,3 @@ resource "null_resource" "flux_bootstrap" {
   }
 }
 
-resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
-  content_type = "snippets"
-  datastore_id = "local"
-  node_name    = "host2"
-
-  source_raw {
-    data = <<-EOF
-    #cloud-config
-    hostname: host2
-    timezone: Europe/Amsterdam
-    users:
-      - default
-      - name: ubuntu
-        groups:
-          - sudo
-        shell: /bin/bash
-        ssh_authorized_keys:
-%{for key in var.ssh_public_keys~}
-          - ${key}
-%{endfor~}
-        sudo: ALL=(ALL) NOPASSWD:ALL
-    package_update: true
-    packages:
-      - qemu-guest-agent
-      - curl
-    runcmd:
-      - systemctl enable qemu-guest-agent
-      - systemctl start qemu-guest-agent
-      - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -s - server --bind-address 192.168.1.50
-      - echo "done" > /tmp/cloud-config.done
-    EOF
-
-    file_name = "k3s-cloud-config.yaml"
-  }
-}
