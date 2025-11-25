@@ -90,13 +90,17 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
     package_update: true
     packages:
       - qemu-guest-agent
-      - ca-certificates
       - curl
       - gnupg
 
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
+
+      - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - sudo apt update
+      - sudo apt install vault
 
       - echo "done" > /tmp/cloud-config.done
     EOF
