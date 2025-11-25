@@ -81,6 +81,7 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
       - name: debian
         groups:
           - sudo
+          - vault
         shell: /bin/bash
         ssh_authorized_keys:
 %{for key in var.ssh_public_keys~}
@@ -101,6 +102,31 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
       - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
       - sudo apt update
       - sudo apt install vault
+
+      - sudo mkdir -p /opt/vault/data
+      - sudo chown -R vault:vault /opt/vault
+
+      - |
+        cat <<'VAULT_EOF' > /etc/vault.d/vault.hcl
+        ui = true
+        disable_mlock = true
+
+        storage "raft" {
+          path    = "/opt/vault/data"
+          node_id = "node1"
+        }
+
+        listener "tcp" {
+          address     = "0.0.0.0:8200"
+          tls_disable = "true"
+        }
+
+        api_addr = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:8200"
+        cluster_addr = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:8201"
+        VAULT_EOF
+
+      - sudo systemctl enable vault
+      - sudo systemctl start vault
 
       - echo "done" > /tmp/cloud-config.done
     EOF
