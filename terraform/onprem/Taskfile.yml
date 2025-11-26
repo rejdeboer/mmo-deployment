@@ -2,10 +2,12 @@ version: '3'
 
 dotenv: ['.env']
 
+vars:
+  VAULT_KEY_FILE: ~/tmp/vault-keys.json
+
 tasks:
   default:
     cmds:
-      - task: apply-infra
       - task: apply-platform
       - echo "Deployment successful"
 
@@ -15,14 +17,37 @@ tasks:
       - terraform apply -auto-approve
 
   apply-platform:
+    deps: ["apply-infra", "vault-init", "vault-unseal"]
     dir: ./platform
     vars:
-      MINIO_ADDRESS:
+      MINIO_ADDR:
         sh: terraform -chdir=../infra output -raw minio_address
-      VAULT_ADDRESS:
+      VAULT_ADDR:
         sh: terraform -chdir=../infra output -raw vault_address
     env:
-      TF_VAR_minio_address: "{{.MINIO_ADDRESS}}"
-      TF_VAR_vault_address: "{{.VAULT_ADDRESS}}"
+      TF_VAR_minio_address: "{{.MINIO_ADDR}}"
+      TF_VAR_vault_address: "{{.VAULT_ADDR}}"
     cmds:
       - terraform apply -auto-approve
+
+  vault-init:
+    desc: "Initialize Vault"
+    vars:
+      VAULT_ADDR:
+        sh: terraform -chdir=./infra output -raw vault_address
+    cmds:
+      - ./scripts/init_vault.sh {{.VAULT_ADDR}} {{.VAULT_KEY_FILE}}
+
+  vault-unseal:
+    vars:
+      VAULT_ADDR:
+        sh: terraform -chdir=./infra output -raw vault_address
+    status:
+      - |
+        IS_SEALED=$(curl -s {{.VAULT_ADDR}}/v1/sys/health | jq -r .sealed)
+        [[ "$IS_SEALED" == "false" ]]
+    cmds:
+      - echo "Unsealing Vault at {{.VAULT_ADDR}}..."
+      - |
+        UNSEAL_KEY=$(jq -r .unseal_keys_b64[0] {{.KEY_FILE}})
+        vault operator unseal -address={{.VAULT_ADDR}} $UNSEAL_KEY
