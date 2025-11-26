@@ -1,28 +1,21 @@
-variable "ssh_public_keys" {
-  type = list(string)
-}
-
 variable "github_token" {
   type      = string
   sensitive = true
 }
 
-variable "ssh_private_key_path" {
-  type    = string
-  default = "~/.ssh/id_rsa"
-}
-
-variable "master_key_manifest_path" {
-  type    = string
-  default = "~/tmp/sealed-secrets-key.yml"
+variable "minio_address" {
+  type = string
 }
 
 variable "minio_root_user" {
-  type    = string
-  default = "minio"
+  type = string
 }
 
 variable "minio_root_password" {
   type      = string
   sensitive = true
+}
+
+variable "vault_address" {
+  type = string
 }

@@ -11,6 +11,10 @@ terraform {
       source  = "fluxcd/flux"
       version = "1.7.5"
     }
+    github = {
+      source  = "integrations/github"
+      version = "6.8.3"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
@@ -26,7 +30,10 @@ terraform {
   }
 }
 
-provider "vault" {
-  # Configuration options
-}
+locals {
+  github_org        = "rejdeboer"
+  github_repository = "mmo-deployment"
+  github_branch     = "main"
 
+  kubeconfig_path = "~/.kube/config"
+}

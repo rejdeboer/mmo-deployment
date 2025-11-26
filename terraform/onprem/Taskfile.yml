@@ -15,13 +15,14 @@ tasks:
       - terraform apply -auto-approve
 
   apply-platform:
-    deps: [apply-infra]
     dir: ./platform
     vars:
-      INFRA_OUTPUTS:
-        sh: terraform -chdir=../infra output -json
+      MINIO_ADDRESS:
+        sh: terraform -chdir=../infra output -raw minio_address
+      VAULT_ADDRESS:
+        sh: terraform -chdir=../infra output -raw vault_address
+    env:
+      TF_VAR_minio_address: "{{.MINIO_ADDRESS}}"
+      TF_VAR_vault_address: "{{.VAULT_ADDRESS}}"
     cmds:
-      - vault status
-      - export TF_VAR_kubernetes_ip={{.INFRA_OUTPUTS | jq -r .kubernetes_ip.value}}
-      - export TF_VAR_vault_ip={{.INFRA_OUTPUTS | jq -r .vault_ip.value}}
       - terraform apply -auto-approve

@@ -8,12 +8,12 @@ output "kubernetes_ip" {
   value       = proxmox_virtual_environment_vm.k3s_master_01.ipv4_addresses[1][0]
 }
 
-output "minio_ip" {
-  description = "IP address of Minio"
-  value       = proxmox_virtual_environment_vm.minio.ipv4_addresses[1][0]
+output "minio_address" {
+  description = "The URL to Minio"
+  value       = "http://${proxmox_virtual_environment_vm.minio.ipv4_addresses[1][0]}:${local.minio_console_port}"
 }
 
-output "vault_ip" {
-  description = "IP address of Hashicorp Vault deployment"
-  value       = proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]
+output "vault_address" {
+  description = "The URL to the Hashicorp Vault"
+  value       = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:${local.vault_api_port}"
 }

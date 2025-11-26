@@ -122,7 +122,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
           minio:
             image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
             ports:
-              - "9001:9001"
+              - "${local.minio_console_port}:${local.minio_console_port}"
               - "9000:9000"
             volumes:
               - /mnt/minio_data:/data
@@ -130,7 +130,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
               # IMPORTANT: Terraform variables are expanded here.
               - MINIO_ROOT_USER=${var.minio_root_user}
               - MINIO_ROOT_PASSWORD=${var.minio_root_password}
-            command: server /data --console-address ":9001"
+            command: server /data --console-address ":${local.minio_console_port}"
             restart: unless-stopped
         DOCKER_COMPOSE_EOF
 

@@ -28,8 +28,11 @@ provider "proxmox" {
 }
 
 locals {
-  gateway_ip    = "192.168.1.1"
-  kubernetes_ip = "192.168.1.50"
-  minio_ip      = "192.168.1.51"
-  vault_ip      = "192.168.1.52"
+  gateway_ip         = "192.168.1.1"
+  kubernetes_ip      = "192.168.1.50"
+  minio_ip           = "192.168.1.51"
+  minio_console_port = 9001
+  vault_ip           = "192.168.1.52"
+  vault_api_port     = 8200
+  vault_cluster_port = 8201
 }

@@ -118,12 +118,12 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
         }
 
         listener "tcp" {
-          address     = "0.0.0.0:8200"
+          address     = "0.0.0.0:${local.vault_api_port}"
           tls_disable = "true"
         }
 
-        api_addr = "http://${local.vault_ip}:8200"
-        cluster_addr = "http://${local.vault_ip}:8201"
+        api_addr = "http://${local.vault_ip}:${local.vault_api_port}"
+        cluster_addr = "http://${local.vault_ip}:${local.vault_cluster_port}"
         VAULT_EOF
 
       - sudo systemctl enable vault
