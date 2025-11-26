@@ -7,8 +7,3 @@ output "kubernetes_ip" {
   description = "IP address of the Kubernetes control plane"
   value       = proxmox_virtual_environment_vm.k3s_master_01.ipv4_addresses[1][0]
 }
-
-output "vault_ip" {
-  description = "IP address of Hashicorp vault deployment"
-  value       = proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]
-}

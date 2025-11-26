@@ -23,5 +23,4 @@ tasks:
     cmds:
       - vault status
       - export TF_VAR_kubernetes_ip={{.INFRA_OUTPUTS | jq -r .kubernetes_ip.value}}
-      - export TF_VAR_vault_ip={{.INFRA_OUTPUTS | jq -r .vault_ip.value}}
       - terraform apply -auto-approve

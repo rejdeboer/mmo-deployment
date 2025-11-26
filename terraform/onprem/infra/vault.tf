@@ -43,7 +43,8 @@ resource "proxmox_virtual_environment_vm" "vault" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = "${var.vault_ip}/24"
+        gateway = var.gateway_ip
       }
     }
 
@@ -121,8 +122,8 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
           tls_disable = "true"
         }
 
-        api_addr = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:8200"
-        cluster_addr = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:8201"
+        api_addr = "http://${var.vault_ip}:8200"
+        cluster_addr = "http://${var.vault_ip}:8201"
         VAULT_EOF
 
       - sudo systemctl enable vault
