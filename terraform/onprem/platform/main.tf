@@ -15,6 +15,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
     }
+    minio = {
+      source  = "aminueza/minio"
+      version = "3.11.4"
+    }
     vault = {
       source  = "hashicorp/vault"
       version = "5.5.0"

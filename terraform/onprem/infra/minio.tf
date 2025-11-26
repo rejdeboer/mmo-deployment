@@ -6,7 +6,6 @@ resource "proxmox_virtual_environment_vm" "minio" {
 
   cpu {
     cores = 2
-    type  = "host"
   }
 
   memory {
@@ -19,7 +18,7 @@ resource "proxmox_virtual_environment_vm" "minio" {
 
   network_device {
     bridge      = "vmbr0"
-    mac_address = "BC:24:11:BA:5B:D3"
+    mac_address = "BC:24:11:BA:5B:D5"
   }
 
   disk { # OS Disk
@@ -43,7 +42,8 @@ resource "proxmox_virtual_environment_vm" "minio" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = "${local.minio_ip}/24"
+        gateway = local.gateway_ip
       }
     }
 

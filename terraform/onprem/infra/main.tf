@@ -26,3 +26,10 @@ provider "proxmox" {
   endpoint = "https://192.168.1.101:8006/api2/json"
   insecure = true
 }
+
+locals {
+  gateway_ip    = "192.168.1.1"
+  kubernetes_ip = "192.168.1.50"
+  minio_ip      = "192.168.1.51"
+  vault_ip      = "192.168.1.52"
+}

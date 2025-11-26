@@ -34,7 +34,8 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = "${local.kubernetes_ip}/24"
+        gateway = local.gateway_ip
       }
     }
 

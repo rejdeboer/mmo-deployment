@@ -1,8 +1,3 @@
-variable "gateway_ip" {
-  type    = string
-  default = "192.168.1.1"
-}
-
 variable "ssh_public_keys" {
   type = list(string)
 }
@@ -30,9 +25,4 @@ variable "minio_root_user" {
 variable "minio_root_password" {
   type      = string
   sensitive = true
-}
-
-variable "vault_ip" {
-  description = "Static IP f0r Vault (e.g., 192.168.1.52)"
-  default     = "192.168.1.52"
 }
