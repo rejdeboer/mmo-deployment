@@ -70,3 +70,16 @@ resource "vault_kv_secret_v2" "netcode_private_key" {
   })
 }
 
+resource "random_password" "jwt_secret" {
+  length  = 64
+  special = false
+}
+
+resource "vault_kv_secret_v2" "jwt" {
+  mount = vault_mount.kv.path
+  name  = "app/jwt"
+
+  data_json = jsonencode({
+    secret = random_password.jwt_secret.result
+  })
+}
