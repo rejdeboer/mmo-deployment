@@ -42,23 +42,27 @@ spec:
           ports:
             - containerPort: 8032
           env:
-            - name: DATABASE_PORT
+            - name: PROVISIONER_DATABASE_PORT
               value: "5432"
-            - name: DATABASE_NAME
+            - name: PROVISIONER_DATABASE_NAME
               value: "mmo"
-            - name: DATABASE_HOST
+            - name: PROVISIONER_DATABASE_HOST
               value: "postgres-main-rw"
-            - name: DATABASE_USERNAME
+            - name: PROVISIONER_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: username
-            - name: DATABASE_PASSWORD
+            - name: PROVISIONER_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: pg-secret
                   key: password
-            - name: SERVER_NETCODE_PRIVATE_KEY
+            - name: PROVISIONER_SERVER_HOST
+              value: "0.0.0.0"
+            - name: PROVISIONER_SERVER_PORT
+              value: "8032"
+            - name: PROVISIONER_SERVER_NETCODE_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
                   name: netcode-secret
