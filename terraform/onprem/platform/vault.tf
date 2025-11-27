@@ -8,9 +8,11 @@ resource "vault_auth_backend" "kubernetes" {
 }
 
 resource "vault_kubernetes_auth_backend_config" "config" {
-  backend            = vault_auth_backend.kubernetes.path
-  kubernetes_host    = local.kube_cluster_config.server
-  kubernetes_ca_cert = base64decode(local.kube_cluster_config["certificate-authority-data"])
+  backend                = vault_auth_backend.kubernetes.path
+  kubernetes_host        = local.kube_cluster_config.server
+  kubernetes_ca_cert     = base64decode(local.kube_cluster_config["certificate-authority-data"])
+  token_reviewer_jwt     = kubernetes_secret.vault_reviewer_token.data.token
+  disable_iss_validation = true
 }
 
 resource "vault_mount" "kv" {
