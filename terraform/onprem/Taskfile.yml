@@ -17,7 +17,7 @@ tasks:
       - terraform apply -auto-approve
 
   apply-platform:
-    deps: ["apply-infra", "vault-init", "vault-unseal"]
+    deps: ["vault-unseal"]
     dir: ./platform
     vars:
       MINIO_ADDR:
@@ -31,6 +31,7 @@ tasks:
       - terraform apply -auto-approve
 
   vault-init:
+    deps: ["apply-infra"]
     desc: "Initialize Vault"
     vars:
       VAULT_ADDR:
@@ -39,6 +40,7 @@ tasks:
       - ./scripts/init_vault.sh {{.VAULT_ADDR}} {{.VAULT_KEY_FILE}}
 
   vault-unseal:
+    deps: ["vault-init"]
     vars:
       VAULT_ADDR:
         sh: terraform -chdir=./infra output -raw vault_address
@@ -49,5 +51,5 @@ tasks:
     cmds:
       - echo "Unsealing Vault at {{.VAULT_ADDR}}..."
       - |
-        UNSEAL_KEY=$(jq -r .unseal_keys_b64[0] {{.KEY_FILE}})
+        UNSEAL_KEY=$(jq -r ".unseal_keys_b64[0]" {{.VAULT_KEY_FILE}})
         vault operator unseal -address={{.VAULT_ADDR}} $UNSEAL_KEY

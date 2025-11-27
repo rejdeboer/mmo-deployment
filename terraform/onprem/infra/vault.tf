@@ -82,7 +82,6 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
       - name: debian
         groups:
           - sudo
-          - vault
         shell: /bin/bash
         ssh_authorized_keys:
 %{for key in var.ssh_public_keys~}
@@ -92,17 +91,15 @@ resource "proxmox_virtual_environment_file" "vault_cloud_config" {
     package_update: true
     packages:
       - qemu-guest-agent
-      - curl
       - gnupg
 
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
 
-      - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-      - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-      - sudo apt update
-      - sudo apt install vault
+      - wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - sudo apt update && sudo apt install vault
 
       - sudo mkdir -p /opt/vault/data
       - sudo chown -R vault:vault /opt/vault

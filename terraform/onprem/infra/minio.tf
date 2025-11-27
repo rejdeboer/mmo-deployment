@@ -6,6 +6,7 @@ resource "proxmox_virtual_environment_vm" "minio" {
 
   cpu {
     cores = 2
+    type  = "host"
   }
 
   memory {
@@ -120,7 +121,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
 
         services:
           minio:
-            image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
+            image: minio/minio:RELEASE.2025-09-07T16-13-09Z
             ports:
               - "${local.minio_console_port}:${local.minio_console_port}"
               - "9000:9000"
