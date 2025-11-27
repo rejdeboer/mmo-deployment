@@ -41,3 +41,32 @@ resource "vault_kubernetes_auth_backend_role" "eso" {
   token_ttl      = 3600
   token_policies = [vault_policy.read_secrets.name]
 }
+
+resource "random_password" "postgres_root" {
+  length  = 24
+  special = false
+}
+
+resource "vault_kv_secret_v2" "postgres" {
+  mount = vault_mount.kv.path
+  name  = "infrastructure/postgres"
+
+  data_json = jsonencode({
+    username = "postgres"
+    password = random_password.postgres_root.result
+  })
+}
+
+resource "random_bytes" "netcode_private_key" {
+  length = 32
+}
+
+resource "vault_kv_secret_v2" "netcode_private_key" {
+  mount = vault_mount.kv.path
+  name  = "app/netcode-private-key"
+
+  data_json = jsonencode({
+    private-key = random_bytes.netcode_private_key.base64
+  })
+}
+
