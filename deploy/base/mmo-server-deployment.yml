@@ -71,6 +71,8 @@ spec:
                 secretKeyRef:
                   name: pg-secret
                   key: password
+            - name: APP_TRACING__FORMAT
+              value: json
           - name: metrics-exporter
             image: nginx:alpine
             resources:
