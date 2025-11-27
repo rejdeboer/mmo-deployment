@@ -35,5 +35,8 @@ locals {
   github_repository = "mmo-deployment"
   github_branch     = "main"
 
-  kubeconfig_path = "~/.kube/config"
+  kubeconfig_path     = "~/.kube/config"
+  kubeconfig_raw      = file(local.kubeconfig_path)
+  kubeconfig          = yamldecode(local.kubeconfig_raw)
+  kube_cluster_config = local.kubeconfig.clusters[0].cluster
 }

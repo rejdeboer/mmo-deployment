@@ -24,9 +24,12 @@ tasks:
         sh: terraform -chdir=../infra output -raw minio_address
       VAULT_ADDR:
         sh: terraform -chdir=../infra output -raw vault_address
+      VAULT_TOKEN:
+        sh: jq -r .root_token {{.VAULT_KEY_FILE}}
     env:
       TF_VAR_minio_address: "{{.MINIO_ADDR}}"
       TF_VAR_vault_address: "{{.VAULT_ADDR}}"
+      TF_VAR_vault_token: "{{.VAULT_TOKEN}}"
     cmds:
       - terraform apply -auto-approve
 
