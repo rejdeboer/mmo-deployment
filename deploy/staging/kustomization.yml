@@ -7,7 +7,6 @@ resources:
   - ../base/ingress.yml
   - ../base/mmo-server-deployment.yml
   - ../base/provisioner.yml
-  - ../base/secrets.yml
   - ../base/web-server-deployment.yml
 patches:
   - path: patches/game-server-config-patch.yml

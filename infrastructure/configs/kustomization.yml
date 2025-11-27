@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   # - cluster-issuers.yml
   - cnpg.yml
+  - external-secrets.yml
   - podmonitor.yml
 configMapGenerator:
   - name: flux-grafana-dashboards
