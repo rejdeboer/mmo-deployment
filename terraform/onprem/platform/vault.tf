@@ -85,3 +85,13 @@ resource "vault_kv_secret_v2" "jwt" {
     secret = random_password.jwt_secret.result
   })
 }
+
+resource "vault_kv_secret_v2" "cloudflare" {
+  mount = vault_mount.kv.path
+  name  = "api/cloudflare-token"
+
+  data_json = jsonencode({
+    token = var.cloudflare_token
+  })
+}
+
