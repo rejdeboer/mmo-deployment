@@ -1,5 +1,5 @@
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt
   namespace: default
@@ -20,3 +20,31 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-secret
               key: api-token
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: whoami
+  namespace: default
+spec:
+  secretName: whoami-tls-app
+  dnsNames:
+    - "mmo.rejdeboer.com"
+    - "mmo-provisioner.rejdeboer.com"
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: whoami
+  namespace: monitoring
+spec:
+  secretName: whoami-tls-monitoring
+  dnsNames:
+    - "grafana.rejdeboer.com"
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+

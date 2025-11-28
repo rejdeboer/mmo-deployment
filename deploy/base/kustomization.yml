@@ -6,4 +6,5 @@ resources:
   - ./game-server-config.yml
   - ./ingress.yml
   - ./mmo-server-deployment.yml
+  - ./namespace.yml
   - ./web-server-deployment.yml

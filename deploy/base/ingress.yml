@@ -1,37 +1,87 @@
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: web-server
+#   namespace: default
+# spec:
+#   entryPoints:
+#     - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
+#   routes:
+#   - match: Host(`mmo.rejdeboer.com`)
+#     kind: Rule
+#     services:
+#     - name: web-server 
+#       port: 80
+#   tls:
+#     secretName: whoami-tls-app
+#     domains:
+#     - main: "mmo.rejdeboer.com"
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: grafana-dashboard
+#   namespace: monitoring
+# spec:
+#   entryPoints:
+#     - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
+#   routes:
+#   - match: Host(`grafana.rejdeboer.com`)
+#     kind: Rule
+#     services:
+#     - name: kube-prometheus-stack-grafana 
+#       port: 80
+#   tls:
+#     secretName: whoami-tls-monitoring
+#     domains:
+#     - main: "grafana.rejdeboer.com"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: web-server
   namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
-  entryPoints:
-    - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
-  routes:
-  - match: Host(`mmo.rejdeboer.com`)
-    kind: Rule
-    services:
-    - name: web-server 
-      port: 80
+  ingressClassName: traefik
+  rules:
+    - host: mmo.rejdeboer.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web-server
+                port:
+                  number: 80
   tls:
-    certResolver: letsencrypt 
-    domains:
-    - main: "mmo.rejdeboer.com"
+    - hosts:
+        - mmo.rejdeboer.com
+      secretName: whoami-tls-app
 ---
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: grafana-dashboard
+  name: monitoring
   namespace: monitoring
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
-  entryPoints:
-    - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
-  routes:
-  - match: Host(`grafana.rejdeboer.com`)
-    kind: Rule
-    services:
-    - name: kube-prometheus-stack-grafana 
-      port: 80
+  ingressClassName: traefik
+  rules:
+    - host: grafana.rejdeboer.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-grafana
+                port:
+                  number: 80
   tls:
-    certResolver: letsencrypt 
-    domains:
-    - main: "grafana.rejdeboer.com"
+    - hosts:
+        - grafana.rejdeboer.com
+      secretName: whoami-tls-monitoring

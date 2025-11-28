@@ -56,8 +56,9 @@ spec:
         - name: external-dns
           image: registry.k8s.io/external-dns/external-dns:v0.20.0
           args:
-            - --source=service
+            # - --source=traefik-proxy
             - --source=ingress
+            - --source=service
             - --provider=cloudflare
             # NOTE: Pihole only supports A/AAAA/CNAME, so we need to prevent trying o create TXT
             # - --registry=noop
@@ -65,7 +66,7 @@ spec:
             # - --pihole-api-version=6
             # - --pihole-server=http://192.168.1.53
             - --domain-filter=rejdeboer.com
-            - --cloudflare-proxied
+            # - --cloudflare-proxied
             - --txt-prefix=externaldns-
           env:
             - name: CF_API_TOKEN

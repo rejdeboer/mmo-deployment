@@ -4,6 +4,7 @@ metadata:
   name: cert-manager
   labels:
     toolkit.fluxcd.io/tenant: sre-team
+    inject-cloudflare: "true"
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
