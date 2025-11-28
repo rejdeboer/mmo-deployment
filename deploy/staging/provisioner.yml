@@ -74,15 +74,15 @@ metadata:
   name: mmo-provisioner
   namespace: default
 spec:
-  # entryPoints:
-  #   - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
+  entryPoints:
+    - websecure # Assumes you are using the 'websecure' entrypoint for HTTPS
   routes:
-  - match: Host(`mmo-provisioner.homelab.io`)
+  - match: Host(`mmo.provisioner.rejdeboer.com`)
     kind: Rule
     services:
     - name: mmo-provisioner
       port: 80
-  # tls:
-  #   certResolver: letsencrypt 
-  #   domains:
-  #   - main: "mmo-provisioner.homelab.io"
+  tls:
+    certResolver: letsencrypt 
+    domains:
+    - main: "mmo.provisioner.rejdeboer.com"

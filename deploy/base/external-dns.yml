@@ -54,36 +54,24 @@ spec:
       serviceAccountName: external-dns
       containers:
         - name: external-dns
-          image: registry.k8s.io/external-dns/external-dns:v0.18.0
+          image: registry.k8s.io/external-dns/external-dns:v0.20.0
           args:
             - --source=service
             - --source=ingress
-            - --provider=pihole
+            - --provider=cloudflare
             # NOTE: Pihole only supports A/AAAA/CNAME, so we need to prevent trying o create TXT
-            - --registry=noop
-            - --policy=upsert-only
-            - --pihole-api-version=6
-            - --pihole-server=http://192.168.1.53
-            # - --domain-filter=rejdeboer.com
-            # - --cloudflare-proxied
-            # - --txt-prefix=externaldns-
-          envFrom:
-            - secretRef:
-                name: pihole-secret
+            # - --registry=noop
+            # - --policy=upsert-only
+            # - --pihole-api-version=6
+            # - --pihole-server=http://192.168.1.53
+            - --domain-filter=rejdeboer.com
+            - --cloudflare-proxied
+            - --txt-prefix=externaldns-
+          env:
+            - name: CF_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-secret
+                  key: api-token
       securityContext:
         fsGroup: 65534
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  creationTimestamp: null
-  name: pihole-secret
-  namespace: default
-spec:
-  encryptedData:
-    EXTERNAL_DNS_PIHOLE_PASSWORD: AgBpf16N74mS6/M8PxRqr8cKya+MPxkQDv/MELah/6gqQkYFT/2VyCXvsBWkzUmhpRKHsSlMqaESXeBvXPzNorosirWH+eMFptj5vwv6+kPNqRBNMJxWvulpMWnZM/18IEZZ+kDBToeAXi2pfbL8P8Y3JA2Bhib2lThj8UtRrl24825cfvhuOHvkNunoKeIGOy45E4ow9ZsgFmG97qvbVig5dO694HeTuY4OjEX8kerNooU5VFKx38TwiUt+YTL+TzIPuWFCMrenIr801gfunxDMDzr8CEnaoDsFf6dVnTzgzhD62IK66Z6oO8YbroKDeIKk8waGChTwszujotnqfry10fOWXYWgk4aCak6ARKKN1kGDwkF8BUfhG3brIkQg//Z2M+xZ2j0umlpgBUOHgucQBFhwCfe5ud+aNtxmBdhru4p1wHuFPOU9iyM/nwpnBvwcHyPkF6ruj17AoKCAYJRC/nvGFVT4nvI16BQn0q5oaksWc5iqKoKYdCFY0iXFqUOk0djZQlUHcfiWcqRslY6lhZ59VW8mxDoo2ETyRMJgorGHfntoNnNLzvUgPQPVHLScGT4cr4akO9e/Bib8jckynB21XGx50JG6jOCJ97nJgOVn3iDuhLv1JtnWqkpj7L3OwyoeJJdDer0Hn1lzVyHmBbD268UkY4SsORFJBwc7VUVdrIdvCVwEEkBIRNCxIUU5/ArYW3YcSA==
-  template:
-    metadata:
-      creationTimestamp: null
-      name: pihole-secret
-      namespace: default
