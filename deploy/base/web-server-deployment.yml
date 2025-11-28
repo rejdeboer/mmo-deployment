@@ -84,6 +84,8 @@ spec:
                   key: password
             - name: APP_metrics__PORT
               value: "8001"
+            - name: APP_TELEMETRY__TRACING_FORMAT
+              value: json
 ---
 apiVersion: v1
 kind: ServiceAccount
