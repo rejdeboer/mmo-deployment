@@ -54,7 +54,7 @@ resource "vault_kv_secret_v2" "postgres" {
   name  = "infrastructure/postgres"
 
   data_json = jsonencode({
-    username = "postgres"
+    username = "mmo"
     password = random_password.postgres_root.result
   })
 }
