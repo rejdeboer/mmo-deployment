@@ -9,7 +9,7 @@ spec:
   bootstrap:
     initdb:
       database: mmo 
-      owner: mmo  
+      owner: postgres
       secret:
         name: pg-secret 
 
