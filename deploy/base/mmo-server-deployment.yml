@@ -22,7 +22,7 @@ spec:
       ports:
       - name: default
         protocol: UDP
-        containerPort: 8000
+        containerPort: 7777
       template:
         metadata:
           labels:
