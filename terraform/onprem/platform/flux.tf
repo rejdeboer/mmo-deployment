@@ -10,10 +10,6 @@ provider "flux" {
       private_key = tls_private_key.flux.private_key_pem
     }
   }
-  components_extra = [
-    "image-reflector-controller",
-    "image-automation-controller"
-  ]
 }
 
 resource "flux_bootstrap_git" "this" {
@@ -21,5 +17,9 @@ resource "flux_bootstrap_git" "this" {
     github_repository_deploy_key.this
   ]
   path = "clusters/staging"
+  components_extra = [
+    "image-reflector-controller",
+    "image-automation-controller"
+  ]
 }
 

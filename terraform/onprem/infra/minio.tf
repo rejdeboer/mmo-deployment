@@ -80,6 +80,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
     users:
       - default
       - name: debian
+        password: ${var.minio_root_password}
         groups:
           - sudo
           - docker
