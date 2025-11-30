@@ -19,3 +19,13 @@ variable "minio_root_password" {
 variable "vault_address" {
   type = string
 }
+
+variable "vault_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "cloudflare_token" {
+  type      = string
+  sensitive = true
+}

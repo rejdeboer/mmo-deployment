@@ -23,6 +23,10 @@ terraform {
       source  = "aminueza/minio"
       version = "3.11.4"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
+    }
     vault = {
       source  = "hashicorp/vault"
       version = "5.5.0"
@@ -35,5 +39,8 @@ locals {
   github_repository = "mmo-deployment"
   github_branch     = "main"
 
-  kubeconfig_path = "~/.kube/config"
+  kubeconfig_path     = "~/.kube/config"
+  kubeconfig_raw      = file(local.kubeconfig_path)
+  kubeconfig          = yamldecode(local.kubeconfig_raw)
+  kube_cluster_config = local.kubeconfig.clusters[0].cluster
 }

@@ -9,7 +9,7 @@ spec:
   bootstrap:
     initdb:
       database: mmo 
-      owner: mmo  
+      owner: mmo
       secret:
         name: pg-secret 
 
@@ -22,19 +22,3 @@ spec:
   # For a homelab, this allows the operator to automatically restart the
   # primary instance after a configuration change or upgrade.
   primaryUpdateStrategy: unsupervised
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  creationTimestamp: null
-  name: pg-secret
-  namespace: default
-spec:
-  encryptedData:
-    password: AgCwHkitI4knKtA2RxucfB4bc9vzYGl7uUtNCBCxjwpLvbgrasJgLUIgK4Il12U0Nnh2Nswvyq9E1RIjvH9R4vOK7wZGpN1UWu2GiaBiqIh6G+0y4XnlZWshlgsyAtZD7vogJOTLH4C8p3y5eVND65wdlsOHj9LNCqMUGwhvymFVmoDuOC7Kja1D76g7zuhSUETctjQwVrCfXybGE8701mrQWpesgA0zydjYAdr0VeleaLX0XqGzWWWSjW8z85zwVCBhkNcfGSSOCXFvfEycs/yTXhcKbcW9LolFcFdfa4kUAc9T4AtPURv7JN9jLQSDOHrDE43US9gALn2eaCDYKDsc3MS4n2UEJk9nihO3bvumDj+t7kKXf5fUcs1JqvELJq0SgvnI8r1X1r8qE/eo7o8X+dX1cb7cokRHR+nVtcL8/V7C+Hp0g+KJyCf/za652RT78SC2pcAPN71k0iibcWwBpyqPfLNps7CP2v89ZJrAFVt9ONuf5W1mF0FW/cHUO6c3D0As8cWhhFd0YguuQqKDzj+DoW+LuZpf8y04BSYsdUBOX/6jFoRo61sX+zTMkLerZ+ggoy/W/sFcMYMPA9jeuq/8BAIudXpL2Lq6KgI4tudELeqhqPE9EWwdas9a/04HFKQjE44Q8Rjdk9i/9YY68UMXeCDqtf6ezEeyB0WFudmSx4J/bxzySJgnddMActmAX8Js5kMi8KkS94yGiYjA6xkEjA==
-    username: AgAX33Wf82sOTu1dHhMGPRRftIGS/ZtRc81vHu2auSdp9FxWr7DO7IoVyX3WFuu32kn47L2i160+86qBkp1UJF4itFt2IzFaSYfM5mBinYe5s+TKd99WhTwF0fa7MyK2cvrrRd8KposzUetbb8fTC3/aV3HO4Gggzk9hXyUuRrsMCaphQJN0BRJfQp9/EbJtssn4lgh8EJ2t52fSGwIWr0UDn+Uv8Gply7mz+Tp2AVTY21dS38lJ56VkoNWMusmT4bfAdcSmd+6FFZPgHjKodh87l+ioC+rd/RTXqRLva0X78/hESDUXZxj7xoNcf4QwEeQpD54YA8F5W5hz+EzkUPMGmn+dDlK3n/k5M+CiOhJMGz2TSc6esIxja+hz5VsujmroA+Z0TWtOsFy7HS5ZABBuAy/CG2DA/GLsl2pTXf/yyl333Fdzy8SsCb6RjtZRJ6+UDH/mAqhYCQjDN/mAObByihvnxNSa17ujfRQCZWlQIrCLrpJyz55hpwsB/wr4rCuZXSegTKLqFsG3PQaADRmtM1ZtcQizUpet1p/AieZM0zYr53b0QevWnDojs0KHVDRpweu/cplHJtD6mVSxpHdUyUBScnOnsVt0BIEf9NJNAQGyjmMy714GWVyR9+8RXsqxX0wInLhl4AsTmOwwpUBNlrpzQK4xRFjcBAqhbwuUxzh9YxKVcS+AmAsJ7ovDgYaxsPk=
-  template:
-    metadata:
-      creationTimestamp: null
-      name: pg-secret
-      namespace: default
