@@ -10,6 +10,10 @@ provider "flux" {
       private_key = tls_private_key.flux.private_key_pem
     }
   }
+  components_extra = [
+    "image-reflector-controller",
+    "image-automation-controller"
+  ]
 }
 
 resource "flux_bootstrap_git" "this" {
