@@ -39,7 +39,7 @@ spec:
                 memory: "512Mi"
                 cpu: "500m"
             ports:
-            - containerPort: 8000
+            - containerPort: 7777
               protocol: UDP
             volumeMounts:
             - name: metrics

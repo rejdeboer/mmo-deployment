@@ -7,5 +7,5 @@ data:
   ENVIRONMENT: production
   RUST_LOG: INFO
   APP_SERVER__HOST: "0.0.0.0"
-  APP_SERVER__PORT: "8000"
+  APP_SERVER__PORT: "7777"
   APP_SERVER__METRICS_PATH: /metrics/game.prom
