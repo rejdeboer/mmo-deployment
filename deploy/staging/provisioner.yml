@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: mmo-provisioner
-          image: rejdeboer/mmo-provisioner:main-b3df57c-1764445392 # {"$imagepolicy": "flux-system:mmo-provisioner"}
+          image: rejdeboer/mmo-provisioner:main-fd54d82-1764503766 # {"$imagepolicy": "flux-system:mmo-provisioner"}
           resources:
             requests:
               memory: "256Mi"
@@ -92,4 +92,3 @@ spec:
     - hosts:
         - mmo-provisioner.rejdeboer.com
       secretName: whoami-tls-app
-
