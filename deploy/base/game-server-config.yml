@@ -10,4 +10,3 @@ data:
   APP_SERVER__PORT: "7777"
   APP_SERVER__METRICS_PATH: /metrics/game.prom
   APP_SERVER__ENABLE_AGONES: "true"
-  APP_TRACING__OTEL_EXPORTER_ENDPOINT: http://tempo.monitoring.svc.cluster.local:4317

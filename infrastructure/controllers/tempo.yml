@@ -61,7 +61,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-grafana-to-tempo
+  name: tempo-ingress
   namespace: monitoring
 spec:
   podSelector:
@@ -77,3 +77,13 @@ spec:
       ports:
         - protocol: TCP
           port: 3200
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+      ports:
+        - protocol: TCP
+          port: 4317
+        - protocol: TCP
+          port: 4318
+
