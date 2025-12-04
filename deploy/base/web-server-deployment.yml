@@ -136,6 +136,9 @@ spec:
       ports:
         - protocol: TCP
           port: 8001
+    - ports:
+        - protocol: TCP
+          port: 8000
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
