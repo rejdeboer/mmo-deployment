@@ -11,6 +11,7 @@ configMapGenerator:
     files:
       - dashboards/control-plane.json
       - dashboards/cluster.json
+      - dashboards/game-server.json
       - dashboards/logs.json
     options:
       labels:

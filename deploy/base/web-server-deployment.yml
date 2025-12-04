@@ -86,6 +86,8 @@ spec:
               value: "8001"
             - name: APP_TELEMETRY__TRACING_FORMAT
               value: json
+            - name: APP_TELEMETRY__OTEL_EXPORTER_ENDPOINT 
+              value: http://tempo.monitoring.svc.cluster.local:4317
 ---
 apiVersion: v1
 kind: ServiceAccount

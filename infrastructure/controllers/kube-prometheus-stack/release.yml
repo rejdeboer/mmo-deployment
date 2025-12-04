@@ -46,3 +46,14 @@ spec:
       defaultDashboardsEnabled: false
       # TODO: Make this secure
       adminPassword: admin
+      additionalDataSources:
+        - name: Tempo
+          type: tempo
+          uid: tempo
+          url: http://tempo.monitoring.svc.cluster.local:3200
+          access: proxy
+          jsonData:
+            nodeGraph:
+              enabled: true
+            lokiSearch:
+              datasourceUid: loki
