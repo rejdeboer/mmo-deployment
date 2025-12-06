@@ -44,3 +44,10 @@ locals {
   kubeconfig          = yamldecode(local.kubeconfig_raw)
   kube_cluster_config = local.kubeconfig.clusters[0].cluster
 }
+
+provider "minio" {
+  minio_server   = var.minio_address
+  minio_user     = var.minio_root_user
+  minio_password = var.minio_root_password
+}
+
