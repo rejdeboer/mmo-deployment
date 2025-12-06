@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - agones.yml
   - cert-manager.yml
-  - external-secrets.yml
   - cnpg.yml
   - kube-prometheus-stack
   - loki-stack

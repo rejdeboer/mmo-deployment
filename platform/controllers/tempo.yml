@@ -16,16 +16,39 @@ spec:
         name: grafana-charts
       interval: 60m
   values:
-    # storage:
-    #   trace:
-    #     backend: s3
-    #     s3:
-    #       endpoint: "http://<YOUR_MINIO_VM_IP>:9000"
-    #       bucket: "tempo-data"
-    #       access_key: ""
-    #       secret_key: ""
-    #       insecure: true
-    #       s3ForcePathStyle: true
+    extraEnv:
+      - name: TEMPO_S3_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: tempo-s3
+            key: access-key
+      - name: TEMPO_S3_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: tempo-s3
+            key: secret-key
+      - name: TEMPO_S3_BUCKET
+        valueFrom:
+          secretKeyRef:
+            name: tempo-s3
+            key: bucket
+      - name: TEMPO_S3_ENDPOINT
+        valueFrom:
+          secretKeyRef:
+            name: tempo-s3
+            key: endpoint
+
+    storage:
+      trace:
+        backend: s3
+        s3:
+          bucket: ${TEMPO_S3_BUCKET}
+          endpoint: ${TEMPO_S3_ENDPOINT}
+          access_key: ${TEMPO_S3_ACCESS_KEY}
+          secret_key: ${TEMPO_S3_SECRET_KEY}
+          insecure: true # True because internal k8s DNS (http) is not HTTPS
+          s3ForcePathstyle: true # Required for MinIO
+
     tempo:
       receivers:
         otlp:
@@ -34,29 +57,10 @@ spec:
               endpoint: 0.0.0.0:4317
             http:
               endpoint: 0.0.0.0:4318
-    storage:
-      trace:
-        backend: local
-        local:
-          path: /var/tempo/traces
-        wal:
-          path: /var/tempo/wal
 
     persistence:
       enabled: true
       size: 10Gi
-    #   extraEnv:
-      # - name: S3_ACCESS_KEY_ID
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: minio-credentials
-      #       key: access_key
-      # - name: S3_SECRET_ACCESS_KEY
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: minio-credentials
-      #       key: secret_key
-      #
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
