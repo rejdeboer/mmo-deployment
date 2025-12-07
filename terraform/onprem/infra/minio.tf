@@ -125,7 +125,7 @@ resource "proxmox_virtual_environment_file" "minio_cloud_config" {
             image: minio/minio:RELEASE.2025-09-07T16-13-09Z
             ports:
               - "${local.minio_console_port}:${local.minio_console_port}"
-              - "9000:9000"
+              - "${local.minio_api_port}:${local.minio_api_port}"
             volumes:
               - /mnt/minio_data:/data
             environment:

@@ -10,7 +10,7 @@ output "kubernetes_ip" {
 
 output "minio_address" {
   description = "The URL to Minio"
-  value       = "http://${proxmox_virtual_environment_vm.minio.ipv4_addresses[1][0]}:${local.minio_console_port}"
+  value       = "${proxmox_virtual_environment_vm.minio.ipv4_addresses[1][0]}:${local.minio_api_port}"
 }
 
 output "vault_address" {

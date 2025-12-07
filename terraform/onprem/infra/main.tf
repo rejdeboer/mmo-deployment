@@ -31,6 +31,7 @@ locals {
   gateway_ip         = "192.168.1.1"
   kubernetes_ip      = "192.168.1.50"
   minio_ip           = "192.168.1.51"
+  minio_api_port     = 9000
   minio_console_port = 9001
   vault_ip           = "192.168.1.52"
   vault_api_port     = 8200
