@@ -40,6 +40,10 @@ resource "proxmox_virtual_environment_vm" "minio" {
     size         = 200
   }
 
+  serial_device {
+    device = "socket"
+  }
+
   initialization {
     ip_config {
       ipv4 {
