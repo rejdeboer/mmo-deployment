@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mimir
+  namespace: monitoring
+spec:
+  interval: 5m
+  dependsOn:
+    - name: kube-prometheus-stack
+  chart:
+    spec:
+      version: "6.0.*"
+      chart: mimir-distributed
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-charts
+      interval: 60m
+  values:
+    global:
+      extraEnvFrom:
+      - secretRef:
+          name: mimir-s3
+
+    minio:
+      enabled: false
+
+    mimir:
+      structuredConfig:
+        common:
+          storage:
+            backend: s3
+            s3:
+              bucket: ${AWS_BUCKET}
+              endpoint: ${AWS_ENDPOINT}
+              insecure: true # True because internal k8s DNS (http) is not HTTPS
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 2Gi

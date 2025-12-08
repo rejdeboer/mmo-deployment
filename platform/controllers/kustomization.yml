@@ -8,4 +8,5 @@ resources:
   - loki-stack
   # TODO: Once we gain more resource, we can use longhorn for HA
   # - longhorn.yml
+  - mimir.yml
   - tempo.yml
