@@ -49,6 +49,10 @@ spec:
             http:
               endpoint: 0.0.0.0:4318
 
+      metricsGenerator:
+        enabled: false
+        remoteWriteUrl: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+
       storage:
         trace:
           backend: s3
