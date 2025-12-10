@@ -11,7 +11,7 @@ patches:
 images:
   - name: rejdeboer/mmo-server
     newName: rejdeboer/mmo-server # {"$imagepolicy": "flux-system:mmo-server:name"}
-    newTag: main-d72fa37-1765304334 # {"$imagepolicy": "flux-system:mmo-server:tag"}
+    newTag: main-47a064b-1765400453 # {"$imagepolicy": "flux-system:mmo-server:tag"}
   - name: rejdeboer/web-server
     newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
     newTag: main-47a064b-1765401111 # {"$imagepolicy": "flux-system:web-server:tag"}
