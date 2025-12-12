@@ -99,7 +99,7 @@ resource "proxmox_virtual_environment_file" "garage_cloud_config" {
       - wget
 
     write_files:
-      - path: /etc/garage/garage.toml
+      - path: /etc/garage.toml
         content: |
           metadata_dir = "/mnt/data/meta"
           data_dir = "/mnt/data/data"
@@ -150,10 +150,11 @@ resource "proxmox_virtual_environment_file" "garage_cloud_config" {
       - mount /dev/vdb /mnt/data
       - echo "/dev/vdb /mnt/data ext4 defaults 0 2" >> /etc/fstab
 
-      - wget https://garagehq.deuxfleurs.fr/_releases/v1.0.0/x86_64-unknown-linux-musl/garage -O /usr/local/bin/garage
+      - wget https://garagehq.deuxfleurs.fr/_releases/v2.1.0/x86_64-unknown-linux-musl/garage -O /usr/local/bin/garage
       - chmod +x /usr/local/bin/garage
-
       - systemctl enable --now garage
+
+      - echo "done" > /tmp/cloud-config.done
     EOF
 
     file_name = "garage-cloud-config.yaml"

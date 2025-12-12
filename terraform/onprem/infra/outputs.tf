@@ -17,3 +17,9 @@ output "vault_address" {
   description = "The URL to the Hashicorp Vault"
   value       = "http://${proxmox_virtual_environment_vm.vault.ipv4_addresses[1][0]}:${local.vault_api_port}"
 }
+
+output "garage_admin_token" {
+  description = "Admin token for Garage"
+  sensitive   = true
+  value       = random_bytes.garage_admin_token.base64
+}

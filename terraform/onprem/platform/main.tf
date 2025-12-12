@@ -11,6 +11,10 @@ terraform {
       source  = "fluxcd/flux"
       version = "1.7.5"
     }
+    garage = {
+      source  = "jkossis/garage"
+      version = "1.0.4"
+    }
     github = {
       source  = "integrations/github"
       version = "6.8.3"
