@@ -33,7 +33,6 @@ resource "proxmox_virtual_environment_vm" "garage" {
 
   disk { # Data storage
     datastore_id = "local-lvm"
-    file_id      = proxmox_virtual_environment_download_file.debian_cloud_image.id
     interface    = "virtio1"
     iothread     = true
     discard      = "on"
@@ -113,11 +112,11 @@ resource "proxmox_virtual_environment_file" "garage_cloud_config" {
 
           [s3_api]
           s3_region = "eu-central-1"
-          api_bind_addr = "[::]:3901"
+          api_bind_addr = "[::]:3900"
           root_domain = ".s3.rejdeboer.com"
 
           [s3_web]
-          bind_addr = "[::]:3900"
+          bind_addr = "[::]:3902"
           root_domain = ".web.rejdeboer.com"
 
           [admin]
