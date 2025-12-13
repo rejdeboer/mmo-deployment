@@ -22,28 +22,24 @@ spec:
       configMap:
         create: true
         content: |
-          loki.source.kubernetes "pods" {
-            targets    = discovery.kubernetes.pods.targets
-            forward_to = [loki.write.local.receiver]
-          }
-
           loki.write "local" {
             endpoint {
               url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
             }
           }
 
+          loki.source.kubernetes "pods" {
+            targets    = discovery.kubernetes.pods.targets
+            forward_to = [loki.write.local.receiver]
+          }
+
           discovery.kubernetes "pods" {
             role = "pod"
           }
 
-          otlp.receiver "traces" {
-            grpc {
-              endpoint = "0.0.0.0:4317"
-            }
-            http {
-              endpoint = "0.0.0.0:4318"
-            }
+          otelcol.receiver.otlp "traces" {
+            grpc {}
+            http {}
             output {
               traces  = [otelcol.exporter.otlp.tempo.input]
             }
