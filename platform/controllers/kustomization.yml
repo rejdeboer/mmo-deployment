@@ -2,13 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - agones.yml
-  - alloy.yml
   - cert-manager.yml
   - cnpg.yml
   - kube-prometheus-stack
-  - loki.yml
-  - loki-stack
   # TODO: Once we gain more resource, we can use longhorn for HA
   # - longhorn.yml
-  # - mimir.yml
-  - tempo.yml
+  - monitoring
