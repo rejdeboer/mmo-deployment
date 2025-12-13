@@ -4,7 +4,6 @@ resources:
   - agones.yml
   - cert-manager.yml
   - cnpg.yml
-  - kube-prometheus-stack
   # TODO: Once we gain more resource, we can use longhorn for HA
   # - longhorn.yml
   - monitoring

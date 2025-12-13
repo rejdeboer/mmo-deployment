@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - alloy.yml
+  - kube-prometheus-stack
   - loki.yml
   # - mimir.yml
   - repository.yml
