@@ -16,11 +16,42 @@ spec:
       interval: 60m
   values:
     deploymentMode: SingleBinary
+    global:
+      extraEnv:
+      - name: LOKI_S3_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3
+            key: access-key
+      - name: LOKI_S3_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3
+            key: secret-key
+      - name: LOKI_S3_BUCKET
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3
+            key: bucket
+      - name: LOKI_S3_ENDPOINT
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3
+            key: endpoint
     loki:
       commonConfig:
         replication_factor: 1
       storage:
-        type: 'filesystem'
+        type: 's3'
+        bucketNames:
+          chunks: ${LOKI_S3_BUCKET}
+          ruler: ${LOKI_S3_BUCKET}
+          admin: ${LOKI_S3_BUCKET}
+        endpoint: ${LOKI_S3_ENDPOINT}
+        insecure: true
+        s3ForcePathStyle: true
+        accessKeyId: ${LOKI_S3_ACCESS_KEY}
+        secretAccessKey: ${LOKI_S3_SECRET_KEY}
       schemaConfig:
         configs:
           - from: "2024-01-01"
