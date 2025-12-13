@@ -55,3 +55,9 @@ provider "minio" {
   minio_password = var.minio_root_password
 }
 
+# TODO: Replace Minio with Garage?
+provider "garage" {
+  endpoint = "http://192.168.1.53:3903"
+  token    = var.garage_admin_token
+}
+
