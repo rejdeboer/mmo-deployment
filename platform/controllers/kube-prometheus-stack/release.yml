@@ -47,6 +47,16 @@ spec:
       # TODO: Make this secure
       adminPassword: admin
       additionalDataSources:
+        - name: Loki
+          type: loki
+          uid: loki
+          url: http://loki-gateway.monitoring.svc.cluster.local
+          jsonData:
+            derivedFields:
+              - datasourceUid: tempo
+                matcherRegex: "trace_id=(\\w+)"
+                name: TraceID
+                url: "$${__value.raw}"
         - name: Tempo
           type: tempo
           uid: tempo
