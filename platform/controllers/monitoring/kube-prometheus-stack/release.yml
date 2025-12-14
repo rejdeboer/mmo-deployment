@@ -31,6 +31,11 @@ spec:
   values:
     alertmanager:
       enabled: true
+      alertmanagerSpec:
+        alertmanagerConfigSelector:
+          matchLabels:
+            release: kube-prometheus-stack
+        alertmanagerConfigNamespaceSelector: {}
     prometheus:
       prometheusSpec:
         retention: 24h
