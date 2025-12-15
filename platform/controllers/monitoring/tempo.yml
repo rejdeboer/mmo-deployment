@@ -87,9 +87,9 @@ spec:
         - protocol: TCP
           port: 3200
     - from:
-        - namespaceSelector:
+        - podSelector:
             matchLabels:
-              kubernetes.io/metadata.name: default
+              app.kubernetes.io/name: alloy
       ports:
         - protocol: TCP
           port: 4317
