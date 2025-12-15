@@ -74,7 +74,7 @@ spec:
             - name: APP_TRACING__FORMAT
               value: json
             - name: APP_TRACING__OTEL_EXPORTER_ENDPOINT
-              value: http://tempo.monitoring.svc.cluster.local:4317
+              value: http://alloy.monitoring.svc.cluster.local:4317
           - name: metrics-exporter
             image: nginx:alpine
             resources:
