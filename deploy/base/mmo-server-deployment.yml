@@ -44,8 +44,8 @@ spec:
             volumeMounts:
             - name: metrics
               mountPath: /metrics
-            - name: assets-volume
-              mountPath: /app/assets
+            # - name: assets-volume
+            #   mountPath: /app/assets
             envFrom:
             - configMapRef:
                 name: game-server-config
@@ -93,9 +93,9 @@ spec:
           volumes:
           - name: metrics
             emptyDir: {}
-          - name: assets-volume
-            configMap:
-              name: assets-config
+          # - name: assets-volume
+          #   configMap:
+          #     name: assets-config
 ---
 apiVersion: v1
 kind: Service
