@@ -14,4 +14,4 @@ images:
     newTag: main-ff03ba4-1767307381 # {"$imagepolicy": "flux-system:mmo-server:tag"}
   - name: rejdeboer/web-server
     newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
-    newTag: main-0a22450-1767288430 # {"$imagepolicy": "flux-system:web-server:tag"}
+    newTag: main-ff03ba4-1767308010 # {"$imagepolicy": "flux-system:web-server:tag"}
