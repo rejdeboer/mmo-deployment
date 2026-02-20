@@ -3,3 +3,4 @@ ssh_public_keys = [
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICV2YiuF+FX1b/ozJQlkbTkxFviICinZhOFaK9FYwveW rejdeboer@Mac.localdomain"
 ]
 ssh_private_key_path = "~/.ssh/id_rsa"
+github_token = "*********"
