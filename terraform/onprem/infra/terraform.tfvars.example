@@ -1,5 +1,5 @@
 ssh_public_keys = [
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFwMYJEwqESP5KI9dIbZ0772/MEAOSlD5bejV0sUEw4l rejdeboer@cachyos-x8664",
-  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFoabkVKCXk9V5KwPhc6KMpwSp+XS1G37NuZ17jzQtQgRwLlY0SuON5GPlw1ZQXA8+Y/LlxFdScgGwz60gPEjtAG6IgkWt4fO/Avn4y1gFAgux+uJ4v5w92LYpV+jA0Bs84/GktA7cWtV7pdGZ4Gm4/g40kl3M/PXAo6fMpjEIA/tV4rxEcrdPxSCNERGWY2ZnIIGlnvcnFeV4Voh7Nd3Jy2l94bIZzjktBv3846SLJlKMsq9+H8wp+pDx+Zvd/IoUL7a8FjJ8ouMRZA5yAyVXt6YTZcCzm7LtII+ooMx5O3+E4BT9nXmgL2HDEEzOeGpUIr3/BD3RRQs1j+3pvLkV6HVdE29ND03jCD9sSo5rQTdvH6IDsW5d5EO06ykY4l/wsikQ2azHknPo/6lq0hUKnYEW1Yd2obzW/nC77bejEBMOiKxah5tbmiCHafgLD0qpvyfl37OAF/FJ4HHgufPqaSK6UwRu+8wnXOlTKBpmOdPQ0kJBuuGQv3A7frSCOyE= rejdeboer@Ricks-MacBook-Pro.local"
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICV2YiuF+FX1b/ozJQlkbTkxFviICinZhOFaK9FYwveW rejdeboer@Mac.localdomain"
 ]
 ssh_private_key_path = "~/.ssh/id_rsa"
