@@ -72,7 +72,6 @@ resource "vault_kv_secret_v2" "mimir_s3" {
   data_json = jsonencode({
     access_key = minio_iam_user.mimir.name
     secret_key = minio_iam_user.mimir.secret
-    bucket     = minio_s3_bucket.mimir.bucket
     endpoint   = var.minio_address
   })
 }

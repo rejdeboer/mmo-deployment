@@ -30,9 +30,15 @@ spec:
           storage:
             backend: s3
             s3:
-              bucket: ${AWS_BUCKET}
               endpoint: ${AWS_ENDPOINT}
               insecure: true # True because internal k8s DNS (http) is not HTTPS
+
+          blocks_storage:
+            s3:
+              bucket_name: mimir-blocks
+          ruler_storage:
+            s3:
+              bucket_name: mimir-ruler
 
     resources:
       requests:
