@@ -7,7 +7,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      version: "6.0.*"
+      version: "6.0.6"
       chart: mimir-distributed
       sourceRef:
         kind: HelmRepository
@@ -38,6 +38,9 @@ spec:
             s3:
               bucket_name: mimir-ruler
 
+          ingest_storage:
+            enabled: false
+
     resources:
       requests:
         cpu: 100m
@@ -46,4 +49,6 @@ spec:
         memory: 2Gi
 
     kafka:
+      enabled: false
+    alertmanager:
       enabled: false
