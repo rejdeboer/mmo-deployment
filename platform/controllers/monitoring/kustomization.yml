@@ -4,7 +4,6 @@ namespace: monitoring
 resources:
   # - alloy.yml
   - k8s-monitoring.yml
-  # - kube-prometheus-stack
   - loki.yml
   # - mimir.yml
   - repository.yml
