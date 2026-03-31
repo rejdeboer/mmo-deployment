@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - external-secrets.yml
   - metallb.yml
+  - namespaces.yml
   - traefik.yml
