@@ -11,18 +11,18 @@ spec:
       version: "4.0.0"
       sourceRef:
         kind: HelmRepository
-        name: grafana
+        name: grafana-charts
   values:
 
     destinations:
-      - name: mimir
+      hostedMetrics:
         type: prometheus
         url: "http://mimir-mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push"
-      - name: loki
+      hostedLogs:
         type: loki
         url: "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
-      - name: tempo
-        type: tempo
+      otlpGateway:
+        type: otlp
         url: "tempo.monitoring.svc.cluster.local:4317"
 
     clusterMetrics:
