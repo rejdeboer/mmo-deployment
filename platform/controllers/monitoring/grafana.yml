@@ -27,6 +27,12 @@ spec:
           url: http://loki-gateway.monitoring
           access: proxy
           isDefault: true
+          jsonData:
+            derivedFields:
+              - datasourceUid: tempo
+                matcherRegex: "trace_id=(\\w+)"
+                name: TraceID
+                url: "$${__value.raw}"
         - name: Mimir
           type: prometheus
           url: http://mimir-gateway.monitoring/prometheus

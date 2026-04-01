@@ -8,3 +8,13 @@ resources:
   - mimir.yml
   - repository.yml
   - tempo.yml
+configMapGenerator:
+  - name: flux-kube-state-metrics-config
+    files:
+      - kube-state-metrics-config.yml
+    options:
+      labels:
+        app.kubernetes.io/part-of: flux
+        app.kubernetes.io/component: monitoring
+configurations:
+  - kustomizeconfig.yml
