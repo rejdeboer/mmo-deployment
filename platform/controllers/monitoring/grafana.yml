@@ -18,6 +18,9 @@ spec:
     grafana.ini:
       server:
         domain: grafana.rejdeboer.com
+    sidecar:
+      dashboards:
+        enabled: true
     datasources:
       datasources.yaml:
         apiVersion: 1
