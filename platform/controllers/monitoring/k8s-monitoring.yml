@@ -26,12 +26,12 @@ spec:
         url: "http://mimir-gateway.monitoring/api/v1/push"
       hostedLogs:
         type: loki
-        url: "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
+        url: "http://loki-gateway.monitoring/loki/api/v1/push"
       otlpGateway:
         type: otlp
         url: "tempo.monitoring.svc.cluster.local:4317"
-        metrics: { enabled: false }
-        logs:    { enabled: false }
+        metrics: { enabled: true }
+        logs:    { enabled: true }
         traces:  { enabled: true }
 
     clusterMetrics:
