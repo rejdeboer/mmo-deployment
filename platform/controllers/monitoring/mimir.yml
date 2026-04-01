@@ -29,26 +29,51 @@ spec:
             backend: s3
             s3:
               endpoint: ${AWS_ENDPOINT}
-              insecure: true # True because internal k8s DNS (http) is not HTTPS
+              insecure: true
 
-          blocks_storage:
-            s3:
-              bucket_name: mimir-blocks
-          ruler_storage:
-            s3:
-              bucket_name: mimir-ruler
+        blocks_storage:
+          s3:
+            bucket_name: mimir-blocks
+        ruler_storage:
+          s3:
+            bucket_name: mimir-ruler
 
-          ingest_storage:
-            enabled: false
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 512Mi
-      limits:
-        memory: 2Gi
+        # NOTE: Use classic deployment
+        ingest_storage:
+          enabled: false
+        ingester:
+          push_grpc_method_enabled: true
 
     kafka:
       enabled: false
+    rollout_operator:
+      enabled: false
     alertmanager:
       enabled: false
+    ruler:
+      enabled: false
+    chunks-cache:
+      enabled: false
+    index-cache:
+      enabled: false
+    metadata-cache:
+      enabled: false
+    results-cache:
+      enabled: false
+
+    ingester:
+      replicas: 1
+      zoneAwareReplication:
+        enabled: false
+    distributor:
+      replicas: 1
+    querier:
+      replicas: 1
+    query_frontend:
+      replicas: 1
+    store_gateway:
+      replicas: 1
+      zoneAwareReplication:
+        enabled: false
+    compactor:
+      replicas: 1

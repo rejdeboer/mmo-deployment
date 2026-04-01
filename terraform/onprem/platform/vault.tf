@@ -95,3 +95,17 @@ resource "vault_kv_secret_v2" "cloudflare" {
   })
 }
 
+resource "random_password" "grafana_admin_password" {
+  length  = 32
+  special = false
+}
+
+resource "vault_kv_secret_v2" "grafana_admin" {
+  mount = vault_mount.kv.path
+  name  = "infrastructure/grafana-admin"
+  data_json = jsonencode({
+    admin_user = "admin"
+    admin_password = random_password.grafana_admin_password.result
+  })
+}
+

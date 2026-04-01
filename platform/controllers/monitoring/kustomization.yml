@@ -3,8 +3,9 @@ kind: Kustomization
 namespace: monitoring
 resources:
   # - alloy.yml
+  - grafana.yml
   - k8s-monitoring.yml
   - loki.yml
-  # - mimir.yml
+  - mimir.yml
   - repository.yml
   - tempo.yml
