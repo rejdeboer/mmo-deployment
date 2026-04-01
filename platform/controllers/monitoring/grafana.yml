@@ -18,3 +18,15 @@ spec:
     grafana.ini:
       server:
         domain: grafana.rejdeboer.com
+    datasources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.monitoring
+      access: proxy
+      isDefault: true
+    - name: Mimir
+      type: prometheus
+      url: http://mimir-gateway.monitoring/prometheus
+      access: proxy
+      isDefault: false
+

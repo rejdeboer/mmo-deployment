@@ -19,7 +19,7 @@ spec:
     destinations:
       hostedMetrics:
         type: prometheus
-        url: "http://mimir-mimir-distributor.monitoring.svc.cluster.local:8080/api/v1/push"
+        url: "http://mimir-gateway.monitoring/api/v1/push"
       hostedLogs:
         type: loki
         url: "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
