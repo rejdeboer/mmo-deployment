@@ -43,10 +43,11 @@ spec:
           enabled: false
         ingester:
           push_grpc_method_enabled: true
+          ring:
+            replication_factor: 1
+            unregister_on_shutdown: true
 
     kafka:
-      enabled: false
-    rollout_operator:
       enabled: false
     alertmanager:
       enabled: false
@@ -62,7 +63,7 @@ spec:
       enabled: false
 
     ingester:
-      replicas: 1
+      replicas: 3
       zoneAwareReplication:
         enabled: false
     distributor:
@@ -77,3 +78,5 @@ spec:
         enabled: false
     compactor:
       replicas: 1
+    rollout_operator:
+      enabled: false
