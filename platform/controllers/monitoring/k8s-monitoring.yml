@@ -4,7 +4,7 @@ metadata:
   name: k8s-monitoring
   namespace: monitoring
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: k8s-monitoring
