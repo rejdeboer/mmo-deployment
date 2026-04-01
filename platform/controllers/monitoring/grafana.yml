@@ -19,14 +19,28 @@ spec:
       server:
         domain: grafana.rejdeboer.com
     datasources:
-    - name: Loki
-      type: loki
-      url: http://loki-gateway.monitoring
-      access: proxy
-      isDefault: true
-    - name: Mimir
-      type: prometheus
-      url: http://mimir-gateway.monitoring/prometheus
-      access: proxy
-      isDefault: false
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          url: http://loki-gateway.monitoring
+          access: proxy
+          isDefault: true
+        - name: Mimir
+          type: prometheus
+          url: http://mimir-gateway.monitoring/prometheus
+          access: proxy
+          isDefault: false
+        - name: Tempo
+          type: tempo
+          uid: tempo
+          url: http://tempo.monitoring.svc.cluster.local:3200
+          access: proxy
+          jsonData:
+            nodeGraph:
+              enabled: true
+            lokiSearch:
+              datasourceUid: loki
+
 
