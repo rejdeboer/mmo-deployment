@@ -4,25 +4,25 @@ metadata:
   name: db-migration
   namespace: flux-system
 spec:
-  image: rejdeboer/mmo-db-migration
+  image: rejdeboer/game-db-migration
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
-  name: mmo-provisioner 
+  name: game-provisioner 
   namespace: flux-system
 spec:
-  image: rejdeboer/mmo-provisioner
+  image: rejdeboer/game-provisioner
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
-  name: mmo-server
+  name: game-server
   namespace: flux-system
 spec:
-  image: rejdeboer/mmo-server
+  image: rejdeboer/game-server
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1

@@ -5,6 +5,6 @@ resources:
   - ./external-dns.yml
   - ./game-server-config.yml
   - ./ingress.yml
-  - ./mmo-server-deployment.yml
+  - ./game-server-deployment.yml
   - ./namespace.yml
   - ./web-server-deployment.yml

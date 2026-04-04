@@ -518,7 +518,7 @@
             "uid": "prometheus"
           },
           "editorMode": "builder",
-          "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{image!=\"\", container=\"mmo-server\"}[$__rate_interval]))",
+          "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{image!=\"\", container=\"game-server\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -614,7 +614,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (pod) (container_memory_working_set_bytes{container=\"mmo-server\"})",
+          "expr": "sum by (pod) (container_memory_working_set_bytes{container=\"game-server\"})",
           "instant": false,
           "legendFormat": "Working set",
           "range": true,
@@ -626,7 +626,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (pod) (container_memory_rss{container=\"mmo-server\"})",
+          "expr": "sum by (pod) (container_memory_rss{container=\"game-server\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "RSS",
@@ -701,7 +701,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{app=\"mmo-server\"} |= ``",
+          "expr": "{app=\"game-server\"} |= ``",
           "legendFormat": "",
           "queryType": "range",
           "refId": "A"
@@ -926,7 +926,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{app=\"mmo-provisioner\"} |= ``",
+          "expr": "{app=\"game-provisioner\"} |= ``",
           "queryType": "range",
           "refId": "A"
         }

@@ -29,8 +29,8 @@ metadata:
 spec:
   secretName: whoami-tls-app
   dnsNames:
-    - "mmo.rejdeboer.com"
-    - "mmo-provisioner.rejdeboer.com"
+    - "game.rejdeboer.com"
+    - "game-provisioner.rejdeboer.com"
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer

@@ -1,9 +1,9 @@
-# TODO: I'm not sure if agones is the right tool for this mmo
+# TODO: I'm not sure if agones is the right tool for this game
 # Might need to refactor to using statefulsets later
 apiVersion: agones.dev/v1
 kind: Fleet
 metadata:
-  name: mmo-server
+  name: game-server
   namespace: default
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
         # TODO: Do we need this?
         realm: main
     spec:
-      container: mmo-server
+      container: game-server
       ports:
       - name: default
         protocol: UDP
@@ -26,11 +26,11 @@ spec:
       template:
         metadata:
           labels:
-            app: mmo-server
+            app: game-server
         spec:
           containers:
-          - name: mmo-server
-            image: rejdeboer/mmo-server:main-74bc879-1763324843 
+          - name: game-server
+            image: rejdeboer/game-server:main-74bc879-1763324843 
             resources:
               requests:
                 memory: "1Gi"
@@ -100,13 +100,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mmo-server-metrics
+  name: game-server-metrics
   namespace: default
   labels:
-    app: mmo-server-metrics
+    app: game-server-metrics
 spec:
   selector:
-    app: mmo-server
+    app: game-server
   ports:
     - name: http-metrics
       protocol: TCP
@@ -116,12 +116,12 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: mmo-server-metrics
+  name: game-server-metrics
   namespace: monitoring
 spec:
   selector:
     matchLabels:
-      app: mmo-server-metrics
+      app: game-server-metrics
   namespaceSelector:
     matchNames:
     - default
