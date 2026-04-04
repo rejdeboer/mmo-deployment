@@ -9,7 +9,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: migration
-        image: rejdeboer/mmo-db-migration:main-74bc879-1763326654 # {"$imagepolicy": "flux-system:db-migration"}
+        image: rejdeboer/game-db-migration:main-58454f6-1775323552 # {"$imagepolicy": "flux-system:db-migration"}
         env:
         - name: DB_HOST
           value: postgres-main-rw
