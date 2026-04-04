@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: game-provisioner
-          image: rejdeboer/game-provisioner:main-0a22450-1767287267 # {"$imagepolicy": "flux-system:game-provisioner"}
+          image: rejdeboer/game-provisioner:main-a964c06-1775324879 # {"$imagepolicy": "flux-system:game-provisioner"}
           resources:
             requests:
               memory: "256Mi"
