@@ -5,7 +5,7 @@ resources:
   - cnpg.yml
   - podmonitor.yml
 configMapGenerator:
-  - name: flux-grafana-dashboards
+  - name: grafana-dashboards
     namespace: monitoring
     files:
       - dashboards/control-plane.json
