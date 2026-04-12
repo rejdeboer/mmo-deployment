@@ -5,7 +5,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   node_name   = "host2"
 
   cpu {
-    cores = 4
+    cores = 10
     type  = "host"
   }
 
