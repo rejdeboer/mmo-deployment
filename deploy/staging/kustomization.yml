@@ -14,4 +14,4 @@ images:
     newTag: main-dfa03a2-1775920505 # {"$imagepolicy": "flux-system:game-server:tag"}
   - name: rejdeboer/web-server
     newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
-    newTag: main-2c90a61-1775326079 # {"$imagepolicy": "flux-system:web-server:tag"}
+    newTag: main-dfa03a2-1775921209 # {"$imagepolicy": "flux-system:web-server:tag"}
