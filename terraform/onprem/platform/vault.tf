@@ -104,8 +104,16 @@ resource "vault_kv_secret_v2" "grafana_admin" {
   mount = vault_mount.kv.path
   name  = "infrastructure/grafana-admin"
   data_json = jsonencode({
-    admin_user = "admin"
+    admin_user     = "admin"
     admin_password = random_password.grafana_admin_password.result
+  })
+}
+
+resource "vault_kv_secret_v2" "alertmanager_api_url" {
+  mount = vault_mount.kv.path
+  name  = "infrastructure/alertmanager"
+  data_json = jsonencode({
+    api_url = variables.alertmanager_api_url
   })
 }
 

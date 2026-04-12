@@ -34,3 +34,8 @@ variable "garage_admin_token" {
   type      = string
   sensitive = true
 }
+
+variable "alertmanager_api_url" {
+  type      = string
+  sensitive = true
+}
