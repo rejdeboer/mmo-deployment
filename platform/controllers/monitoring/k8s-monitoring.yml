@@ -64,12 +64,9 @@ spec:
       alloy-metrics:
         presets: [clustered, statefulset]
         extraConfig: |-
-          prometheus.operator.rules "mimir_rules" {}
-
           mimir.rules.kubernetes "mimir_rules" {
               address = "http://mimir-gateway.monitoring/prometheus/config/rules"
               tenant_id = "anonymous" 
-              rule_files = prometheus.operator.rules.mimir_rules.rule_files
           }
       alloy-logs:
         presets: [filesystem-log-reader, daemonset]
