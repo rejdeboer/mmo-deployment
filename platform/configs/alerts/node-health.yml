@@ -1,0 +1,39 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: node-health
+  namespace: monitoring
+  labels:
+    mimir_rule: "true"
+spec:
+  groups:
+  - name: node-health
+    rules:
+    - alert: KubernetesNodeNotReady
+      expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Node {{ $labels.node }} is not ready."
+        description: "The node has been in a NotReady state for over 5 minutes. Pods may be evicted soon."
+
+    - alert: NodeDiskRunningFull
+      expr: >
+        (node_filesystem_avail_bytes{fstype!~"tmpfs|ramfs", mountpoint="/"} 
+        / node_filesystem_size_bytes{fstype!~"tmpfs|ramfs", mountpoint="/"}) * 100 < 15
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Node {{ $labels.instance }} is running out of disk space."
+        description: "Only {{ $value | printf \"%.2f\" }}% of free disk space remains on the root volume."
+
+    - alert: NodeHighCpuUsage
+      expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Node {{ $labels.instance }} has high CPU usage."
+        description: "CPU usage has been above 90% for 15 minutes."

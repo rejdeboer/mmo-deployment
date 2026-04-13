@@ -60,9 +60,9 @@ spec:
           group_wait: 30s
           group_interval: 5m
           repeat_interval: 12h
-          receiver: 'discord'
+          receiver: 'default-receiver'
         receivers:
-        - name: 'discord'
+        - name: 'default-receiver'
           slack_configs:
           - api_url_file: /etc/secrets/alertmanager/discord-api-rul
             username: 'Mimir Alertmanager'
@@ -77,15 +77,6 @@ spec:
         readOnly: true
     ruler:
       enabled: true
-      extraVolumes:
-      - name: rules-volume
-        configMap:
-          name: mimir-alerts
-      extraVolumeMounts:
-      - name: rules-volume
-        mountPath: /data/ruler/anonymous/alerts.yaml
-        subPath: alerts.yaml
-        readOnly: true
     chunks-cache:
       enabled: false
     index-cache:
