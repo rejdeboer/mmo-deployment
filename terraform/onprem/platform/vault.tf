@@ -113,7 +113,7 @@ resource "vault_kv_secret_v2" "alertmanager_api_url" {
   mount = vault_mount.kv.path
   name  = "infrastructure/alertmanager"
   data_json = jsonencode({
-    api_url = variables.alertmanager_api_url
+    discord_api_url = var.alertmanager_discord_api_url
   })
 }
 
