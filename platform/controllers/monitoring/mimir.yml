@@ -37,6 +37,9 @@ spec:
         ruler_storage:
           s3:
             bucket_name: mimir-ruler
+        alertmanager_storage:
+          s3:
+            bucket_name: mimir-ruler
 
         # NOTE: Use classic deployment
         ingest_storage:
@@ -51,9 +54,6 @@ spec:
       enabled: false
     alertmanager:
       enabled: true
-      extraEnvFrom:
-      - secretRef:
-          name: alertmanager-secret
       fallbackConfig: |
         route:
           group_by: ['alertname', 'cluster', 'service']
@@ -64,9 +64,17 @@ spec:
         receivers:
         - name: 'discord'
           slack_configs:
-          - api_url: ${DISCORD_API_URL}
+          - api_url_file: /etc/secrets/alertmanager/discord-api-rul
             username: 'Mimir Alertmanager'
             send_resolved: true
+      extraVolumes:
+      - name: alertmanager-secret-vol
+        secret:
+          secretName: alertmanager-secret
+      extraVolumeMounts:
+      - name: alertmanager-secret-vol
+        mountPath: /etc/secrets/alertmanager
+        readOnly: true
     ruler:
       enabled: true
       extraVolumes:
