@@ -62,15 +62,22 @@ spec:
           repeat_interval: 12h
           receiver: 'discord'
         receivers:
-          - name: 'discord'
-            slack_configs:
-              - api_url: ${DISCORD_API_URL}
-                username: 'Mimir Alertmanager'
-                title: '{{ template "slack.default.title" . }}'
-                text: '{{ template "slack.default.text" . }}'
-                send_resolved: true
+        - name: 'discord'
+          slack_configs:
+          - api_url: ${DISCORD_API_URL}
+            username: 'Mimir Alertmanager'
+            send_resolved: true
     ruler:
       enabled: true
+      extraVolumes:
+      - name: rules-volume
+        configMap:
+          name: mimir-alerts
+      extraVolumeMounts:
+      - name: rules-volume
+        mountPath: /data/ruler/anonymous/alerts.yaml
+        subPath: alerts.yaml
+        readOnly: true
     chunks-cache:
       enabled: false
     index-cache:
