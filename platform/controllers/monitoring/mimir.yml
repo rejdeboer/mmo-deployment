@@ -55,12 +55,13 @@ spec:
     alertmanager:
       enabled: true
       # NOTE: We use custom config, since fallbackConfig does not support environment variables
+      fallbackConfig: {}
       extraVolumes:
-        - name: config
+        - name: alertmanager-config
           secret:
             secretName: alertmanager-secret
       extraVolumeMounts:
-        - name: config
+        - name: alertmanager-config
           mountPath: /configs/
     ruler:
       enabled: true
