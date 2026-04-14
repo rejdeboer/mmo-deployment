@@ -54,24 +54,14 @@ spec:
       enabled: false
     alertmanager:
       enabled: true
-      extraEnvFrom:
-      - secretRef:
-          name: alertmanager-secret
-      extraArgs:
-        config.expand-env: true
-      fallbackConfig: |
-        route:
-          group_by: ['alertname', 'cluster', 'service']
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 12h
-          receiver: 'default-receiver'
-        receivers:
-        - name: 'default-receiver'
-          slack_configs:
-          - api_url: ${DISCORD_API_URL}
-            username: 'Mimir Alertmanager'
-            send_resolved: true
+      # NOTE: We use custom config, since fallbackConfig does not support environment variables
+      extraVolumes:
+        - name: config
+          secret:
+            secretName: alertmanager-secret
+      extraVolumeMounts:
+        - name: config
+          mountPath: /configs/
     ruler:
       enabled: true
     chunks-cache:
