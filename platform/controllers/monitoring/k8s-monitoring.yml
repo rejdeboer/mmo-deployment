@@ -65,9 +65,8 @@ spec:
         presets: [clustered, statefulset]
         extraConfig: |-
           mimir.rules.kubernetes "mimir_rules" {
-              address = "http://mimir-gateway.monitoring"
+              address = "http://mimir-ruler.monitoring:8080"
               tenant_id = "anonymous" 
-              use_legacy_routes = true // NOTE: Mimir gateway still uses the /prometheus/api/v1/rules endpoint
           }
       alloy-logs:
         presets: [filesystem-log-reader, daemonset]
