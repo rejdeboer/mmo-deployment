@@ -65,7 +65,7 @@ spec:
         presets: [clustered, statefulset]
         extraConfig: |-
           mimir.rules.kubernetes "mimir_rules" {
-              address = "http://mimir-gateway.monitoring/prometheus/api/v1/rules"
+              address = "http://mimir-gateway.monitoring"
               tenant_id = "anonymous" 
           }
       alloy-logs:
