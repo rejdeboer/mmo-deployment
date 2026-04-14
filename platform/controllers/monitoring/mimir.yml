@@ -50,11 +50,14 @@ spec:
             replication_factor: 1
             unregister_on_shutdown: true
 
+        alertmanager:
+          fallback_config_file: /configs/alertmanager_fallback_config.yaml
+
     kafka:
       enabled: false
     alertmanager:
       enabled: true
-      # NOTE: We use custom config, since fallbackConfig does not support environment variables
+      # NOTE: We use custom config, since fallbackConfig does not support passing secrets
       fallbackConfig: {}
       extraVolumes:
         - name: alertmanager-config
