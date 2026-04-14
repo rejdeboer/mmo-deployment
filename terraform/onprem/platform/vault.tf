@@ -109,11 +109,11 @@ resource "vault_kv_secret_v2" "grafana_admin" {
   })
 }
 
-resource "vault_kv_secret_v2" "alertmanager_api_url" {
+resource "vault_kv_secret_v2" "alertmanager" {
   mount = vault_mount.kv.path
   name  = "infrastructure/alertmanager"
   data_json = jsonencode({
-    discord_api_url = var.alertmanager_discord_api_url
+    discord_webhook_url = var.alertmanager_discord_webhook_url
   })
 }
 
