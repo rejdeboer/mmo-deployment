@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
-  namespace: default
+  namespace: cert-manager
 spec:
   acme:
     email: rick.deboer@live.nl

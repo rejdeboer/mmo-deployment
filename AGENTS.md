@@ -13,8 +13,8 @@ This repo contains a blueprint for deploying a mmo-server to a k3s onprem cluste
 
 ## Project structure
 
-- `terraform`: contains terraform blueprint for bootstrapping Proxmox cluster with infra, and bootstrapping the Kubernetes cluster
-- `clusters`: Flux CD K8S cluster bootstrapping manifests per environment
+- `terraform`: contains terraform blueprint for bootstrapping Proxmox cluster with infra, and bootstrapping the Kubernetes cluster. Only the onprem directory is relevant for now.
+- `clusters`: Flux CD K8S cluster bootstrapping manifests per environment. The huge files in `flux-system` directory can be ignored.
 - `system`: Manifests that deploy core resources like secrets and Metallb
 - `platform`: Manifests for platform technologies, like observability using LGTM stack
 - `infra`: WIP, target architecture directory for the Flux CD refactor
