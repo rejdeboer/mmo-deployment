@@ -64,6 +64,10 @@ resource "proxmox_virtual_environment_vm" "vault" {
       host        = self.ipv4_addresses[1][0]
     }
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "proxmox_virtual_environment_file" "vault_cloud_config" {
