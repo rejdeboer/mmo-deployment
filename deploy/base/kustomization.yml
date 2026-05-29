@@ -4,6 +4,7 @@ resources:
   - ./assets-config.yml
   - ./external-dns.yml
   - ./game-server-config.yml
-  - ./ingress.yml
   - ./game-server-deployment.yml
+  - ./ingress.yml
+  - ./vault-ingress.yml
   - ./web-server-deployment.yml
