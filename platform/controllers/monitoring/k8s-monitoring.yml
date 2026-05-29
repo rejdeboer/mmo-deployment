@@ -29,7 +29,7 @@ spec:
         url: "http://loki-gateway.monitoring/loki/api/v1/push"
       otlpGateway:
         type: otlp
-        url: "tempo.monitoring.svc.cluster.local:4317"
+        url: "http://tempo.monitoring.svc.cluster.local:4317"
         metrics: { enabled: true }
         logs:    { enabled: true }
         traces:  { enabled: true }
