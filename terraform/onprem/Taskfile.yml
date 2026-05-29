@@ -1,7 +1,5 @@
 version: '3'
 
-dotenv: ['.env']
-
 vars:
   VAULT_KEY_FILE: ~/tmp/vault-keys.json
 

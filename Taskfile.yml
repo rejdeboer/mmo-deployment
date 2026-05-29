@@ -1,0 +1,8 @@
+version: '3'
+
+dotenv: ['./.env']
+
+includes:
+  onprem:
+    taskfile: ./terraform/onprem/Taskfile.yml
+    dir: ./terraform/onprem
