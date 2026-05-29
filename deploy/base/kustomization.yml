@@ -6,5 +6,4 @@ resources:
   - ./game-server-config.yml
   - ./game-server-deployment.yml
   - ./ingress.yml
-  - ./vault-ingress.yml
   - ./web-server-deployment.yml
