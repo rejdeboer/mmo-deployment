@@ -9,3 +9,8 @@ metadata:
   name: external-dns
   labels:
     inject-cloudflare: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nats
