@@ -42,4 +42,4 @@ spec:
   tls:
     - hosts:
         - vault.rejdeboer.com
-      secretName: whoami-tls-app
+      secretName: vault-tls
