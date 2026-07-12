@@ -157,6 +157,7 @@ provider "registry.terraform.io/jkossis/garage" {
   constraints = "1.0.4"
   hashes = [
     "h1:2JO2+YT0cDFWu9Tv6x3E1aFM++CsbYPQ4iwhzmf0K18=",
+    "h1:tghO0vrj58elQmk9fMiEEh4LN+ydl919jCG93wqnHPw=",
     "zh:13dfcdad73b71b951b12db99d8929d4195ce3df196be84758de22482e507939f",
     "zh:2f07fa62d89f48f41a5e706605b41942dbb48b544b633498e535608b13c9a4d5",
     "zh:3ee15e436d51fbbf8c2f86f4dbec038f26c62537e2cf912594b716a3fdb5c6d5",
