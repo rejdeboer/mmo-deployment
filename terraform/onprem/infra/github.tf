@@ -106,13 +106,13 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
       - systemctl start qemu-guest-agent
 
       - cd home/debian
-      - chown -R debian:debian /home/debian/actions-runner
-      - sudo apt update && sudo apt install perl libicu-dev -y
       - mkdir actions-runner && cd actions-runner
+      - sudo apt update && sudo apt install perl libicu-dev -y
       - curl -o actions-runner-linux-x64-2.335.1.tar.gz -L https://github.com/actions/runner/releases/download/v2.335.1/actions-runner-linux-x64-2.335.1.tar.gz
       - echo "4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf  actions-runner-linux-x64-2.335.1.tar.gz" | shasum -a 256 -c
       - tar xzf ./actions-runner-linux-x64-2.335.1.tar.gz
-      - su - debian -c './config.sh --url https://github.com/${local.github_org}/${local.github_server_repository} --token ${data.github_actions_registration_token.server_runner.token} --unattended --work _work --labels "self-hosted,Linux,X64" --name homelab'
+      - chown -R debian:debian /home/debian/actions-runner
+      - su - debian -c 'cd /home/debian/actions-runner && ./config.sh --url https://github.com/${local.github_org}/${local.github_server_repository} --token ${data.github_actions_registration_token.server_runner.token} --unattended --work _work --labels "self-hosted,Linux,X64" --name homelab'
       - sudo ./svc.sh install debian
       - sudo ./svc.sh start
 
@@ -124,3 +124,33 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
   }
 }
 
+resource "terraform_data" "github_runner_cleanup" {
+  triggers_replace = {
+    vm_id = proxmox_virtual_environment_vm.github_runner.id
+    vm_ip = local.github_runner_ip
+    github_token = var.github_token
+    api_endpoint = "https://github.com/${local.github_org}/${local.github_server_repository}/actions/runners/remove-token"
+  }
+
+  provisioner "local-exec" {
+    when       = destroy
+    on_failure = continue # Ensures Proxmox still deletes if GitHub API fails
+
+    # Fetches an ephemeral removal token and triggers the remove command via SSH
+    command = <<EOT
+      echo "Fetching ephemeral GitHub removal token..."
+      REMOVE_TOKEN=$(curl -s -X POST -H "Authorization: token ${self.triggers_replace.github_token}" \
+        -H "Accept: application/vnd.github+json" \
+        ${self.triggers_replace.api_endpoint} | grep -o '"token":"[^"]*' | grep -o '[^"]*$')
+
+      if [ -z "$REMOVE_TOKEN" ]; then
+        echo "Failed to fetch removal token from GitHub API. Forcing VM deletion anyway."
+        exit 0
+      fi
+
+      echo "Connecting to VM to unregister GitHub runner..."
+      ssh -o StrictHostKeyChecking=no root@${self.triggers_replace.vm_ip} \
+        "cd /actions-runner && ./config.sh remove --token $REMOVE_TOKEN --unattended" || true
+    EOT
+  }
+}
