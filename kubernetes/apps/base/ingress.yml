@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: web-server
   namespace: default
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
@@ -21,15 +19,12 @@ spec:
   tls:
     - hosts:
         - mmo.${DOMAIN}
-      secretName: whoami-tls-app
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: monitoring
   namespace: monitoring
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
@@ -46,4 +41,3 @@ spec:
   tls:
     - hosts:
         - grafana.${DOMAIN}
-      secretName: whoami-tls-monitoring

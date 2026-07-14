@@ -24,26 +24,13 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: whoami
-  namespace: default
+  name: wildcard-tls
+  namespace: kube-system
 spec:
-  secretName: whoami-tls-app
+  secretName: wildcard-tls
   dnsNames:
-    - "game.${DOMAIN}"
-    - "game-provisioner.${DOMAIN}"
+    - "*.${DOMAIN}"
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: whoami
-  namespace: monitoring
-spec:
-  secretName: whoami-tls-monitoring
-  dnsNames:
-    - "grafana.${DOMAIN}"
-  issuerRef:
-    name: letsencrypt
-    kind: ClusterIssuer
+

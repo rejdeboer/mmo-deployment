@@ -30,14 +30,10 @@ spec:
       type: ingress
       ingress:
         hosts:
-          core: ://harbor.${DOMAIN}
+          core: harbor.${DOMAIN}
         className: traefik
         annotations:
           ingress.kubernetes.io/ssl-redirect: "true"
-
-      tls:
-        secret:
-          secretName:
 
     harborAdminPassword: ""
     secretKey: ""

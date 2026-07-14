@@ -73,8 +73,6 @@ kind: Ingress
 metadata:
   name: game-provisioner
   namespace: default
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
@@ -91,4 +89,3 @@ spec:
   tls:
     - hosts:
         - game-provisioner.${DOMAIN}
-      secretName: whoami-tls-app
