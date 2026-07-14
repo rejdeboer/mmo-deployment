@@ -28,7 +28,7 @@ spec:
           storage:
             backend: s3
             s3:
-              endpoint: ${AWS_ENDPOINT}
+              endpoint: $${AWS_ENDPOINT}
               insecure: true
 
         blocks_storage:
