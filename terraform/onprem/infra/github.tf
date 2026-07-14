@@ -28,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "github_runner" {
 
   network_device {
     bridge      = "vmbr0"
-    mac_address = "BC:24:11:BA:5B:D4"
+    mac_address = "BC:24:11:BA:5B:D7"
   }
 
   disk { # OS Disk
@@ -64,6 +64,10 @@ resource "proxmox_virtual_environment_vm" "github_runner" {
       "echo 'Waiting for cloud-init to complete...'",
       "while [ ! -f /tmp/cloud-config.done ]; do sleep 5; done",
       "echo 'Cloud-init finished!'",
+      "cd /home/debian/actions-runner",
+      "./config.sh --url https://github.com/${local.github_org}/${local.github_server_repository} --token ${data.github_actions_registration_token.server_runner.token} --unattended --work _work --labels \"self-hosted,Linux,X64\" --name homelab",
+      "sudo ./svc.sh install debian",
+      "sudo ./svc.sh start"
     ]
 
     connection {
@@ -90,6 +94,7 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
       - name: debian
         groups:
           - sudo
+          - docker
         shell: /bin/bash
         ssh_authorized_keys:
 %{for key in var.ssh_public_keys~}
@@ -106,16 +111,22 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
       - systemctl start qemu-guest-agent
 
       - cd home/debian
+      - sudo apt update && sudo apt install -y perl libicu-dev unzip jq wget build-essential ca-certificates python3 
+
+      # Install Docker
+      - install -m 0755 -d /etc/apt/keyrings
+      - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      - chmod a+r /etc/apt/keyrings/docker.gpg
+      - echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list
+      - apt-get update
+      - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+
+      # Install runner
       - mkdir actions-runner && cd actions-runner
-      - sudo apt update && sudo apt install perl libicu-dev -y
       - curl -o actions-runner-linux-x64-2.335.1.tar.gz -L https://github.com/actions/runner/releases/download/v2.335.1/actions-runner-linux-x64-2.335.1.tar.gz
       - echo "4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf  actions-runner-linux-x64-2.335.1.tar.gz" | shasum -a 256 -c
       - tar xzf ./actions-runner-linux-x64-2.335.1.tar.gz
       - chown -R debian:debian /home/debian/actions-runner
-      - su - debian -c 'cd /home/debian/actions-runner && ./config.sh --url https://github.com/${local.github_org}/${local.github_server_repository} --token ${data.github_actions_registration_token.server_runner.token} --unattended --work _work --labels "self-hosted,Linux,X64" --name homelab'
-      - sudo ./svc.sh install debian
-      - sudo ./svc.sh start
-
 
       - echo "done" > /tmp/cloud-config.done
     EOF
@@ -129,19 +140,18 @@ resource "terraform_data" "github_runner_cleanup" {
     vm_id = proxmox_virtual_environment_vm.github_runner.id
     vm_ip = local.github_runner_ip
     github_token = var.github_token
-    api_endpoint = "https://github.com/${local.github_org}/${local.github_server_repository}/actions/runners/remove-token"
+    api_endpoint = "https://api.github.com/repos/${local.github_org}/${local.github_server_repository}/actions/runners/remove-token"
   }
 
   provisioner "local-exec" {
     when       = destroy
-    on_failure = continue # Ensures Proxmox still deletes if GitHub API fails
+    # on_failure = continue # Ensures Proxmox still deletes if GitHub API fails
 
     # Fetches an ephemeral removal token and triggers the remove command via SSH
     command = <<EOT
       echo "Fetching ephemeral GitHub removal token..."
       REMOVE_TOKEN=$(curl -s -X POST -H "Authorization: token ${self.triggers_replace.github_token}" \
-        -H "Accept: application/vnd.github+json" \
-        ${self.triggers_replace.api_endpoint} | grep -o '"token":"[^"]*' | grep -o '[^"]*$')
+        -H "Accept: application/vnd.github+json" ${self.triggers_replace.api_endpoint} | jq '.token')
 
       if [ -z "$REMOVE_TOKEN" ]; then
         echo "Failed to fetch removal token from GitHub API. Forcing VM deletion anyway."
@@ -149,8 +159,12 @@ resource "terraform_data" "github_runner_cleanup" {
       fi
 
       echo "Connecting to VM to unregister GitHub runner..."
-      ssh -o StrictHostKeyChecking=no root@${self.triggers_replace.vm_ip} \
-        "cd /actions-runner && ./config.sh remove --token $REMOVE_TOKEN --unattended" || true
+      ssh -o StrictHostKeyChecking=no debian@${self.triggers_replace.vm_ip} "
+        cd actions-runner && \
+        sudo ./svc.sh stop || true && \
+        sudo ./svc.sh uninstall || true && \
+        ./config.sh remove --token $REMOVE_TOKEN
+      " || true
     EOT
   }
 }
