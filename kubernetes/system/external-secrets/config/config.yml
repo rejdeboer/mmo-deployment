@@ -1,0 +1,251 @@
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: vault-backend
+spec:
+  # TODO: Set provider using overlay
+  provider:
+    vault:
+      server: "http://192.168.1.52:8200"
+      path: "secret"
+      version: "v2"
+      auth:
+        kubernetes:
+          mountPath: "kubernetes"
+          role: "eso-role"
+          serviceAccountRef:
+            name: external-secrets
+            namespace: external-secrets
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: pg-secret
+  namespace: default
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: pg-secret
+    creationPolicy: Owner
+
+  data:
+  - secretKey: username
+    remoteRef:
+      key: infrastructure/postgres
+      property: username
+  - secretKey: password
+    remoteRef:
+      key: infrastructure/postgres
+      property: password
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: netcode-secret
+  namespace: default
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: netcode-secret
+    creationPolicy: Owner
+
+  data:
+  - secretKey: private-key
+    remoteRef:
+      key: app/netcode-private-key
+      property: private-key
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: jwt-secret
+  namespace: default
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: jwt-secret
+    creationPolicy: Owner
+
+  data:
+  - secretKey: signing-key
+    remoteRef:
+      key: app/jwt
+      property: secret
+---
+apiVersion: external-secrets.io/v1
+kind: ClusterExternalSecret
+metadata:
+  name: cloudflare-secret
+  namespace: default
+spec:
+  externalSecretName: cloudflare-secret
+
+  refreshTime: 5m
+
+  namespaceSelector:
+    matchLabels: 
+      inject-cloudflare: "true"
+
+  externalSecretSpec:
+    refreshInterval: 5m
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+
+    target:
+      name: cloudflare-secret
+      creationPolicy: Owner
+
+    data:
+    - secretKey: api-token
+      remoteRef:
+        key: api/cloudflare-token
+        property: token
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: tempo-s3
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: tempo-s3
+  data:
+    - secretKey: access-key
+      remoteRef:
+        key: infrastructure/tempo-s3
+        property: access_key
+    - secretKey: secret-key
+      remoteRef:
+        key: infrastructure/tempo-s3
+        property: secret_key
+    - secretKey: bucket
+      remoteRef:
+        key: infrastructure/tempo-s3
+        property: bucket
+    - secretKey: endpoint
+      remoteRef:
+        key: infrastructure/tempo-s3
+        property: endpoint
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: loki-s3
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: loki-s3
+  data:
+    - secretKey: access-key
+      remoteRef:
+        key: infrastructure/loki-s3
+        property: access_key
+    - secretKey: secret-key
+      remoteRef:
+        key: infrastructure/loki-s3
+        property: secret_key
+    - secretKey: bucket
+      remoteRef:
+        key: infrastructure/loki-s3
+        property: bucket
+    - secretKey: endpoint
+      remoteRef:
+        key: infrastructure/loki-s3
+        property: endpoint
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: mimir-s3
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: mimir-s3
+  data:
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: infrastructure/mimir-s3
+        property: access_key
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: infrastructure/mimir-s3
+        property: secret_key
+    - secretKey: AWS_ENDPOINT
+      remoteRef:
+        key: infrastructure/mimir-s3
+        property: endpoint
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: grafana-admin
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: grafana-admin
+    creationPolicy: Owner
+
+  data:
+  - secretKey: admin-user
+    remoteRef:
+      key: infrastructure/grafana-admin
+      property: admin_user
+  - secretKey: admin-password
+    remoteRef:
+      key: infrastructure/grafana-admin
+      property: admin_password
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: harbor-credentials
+  namespace: harbor
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: harbor-credentials
+    creationPolicy: Owner
+
+  data:
+  - secretKey: HARBOR_ADMIN_PASSWORD
+    remoteRef:
+      key: infrastructure/harbor-credentials
+      property: admin_password
+  - secretKey: secretKey
+    remoteRef:
+      key: infrastructure/harbor-credentials
+      property: secret_key

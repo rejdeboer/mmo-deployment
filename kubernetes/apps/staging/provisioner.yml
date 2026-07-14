@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-provisioner
+  namespace: default
+  labels:
+    app: game-provisioner
+spec:
+  ports:
+    - name: game-provisioner
+      port: 80
+      targetPort: 8032
+      protocol: TCP
+  selector:
+    app: game-provisioner
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-provisioner
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-provisioner
+  template:
+    metadata:
+      labels:
+        app: game-provisioner
+    spec:
+      containers:
+        - name: game-provisioner
+          image: rejdeboer/game-provisioner:main-755e676-1783935501 # {"$imagepolicy": "flux-system:game-provisioner"}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8032
+          env:
+            - name: APP_DATABASE__PORT
+              value: "5432"
+            - name: APP_DATABASE__NAME
+              value: "mmo"
+            - name: APP_DATABASE__HOST
+              value: "postgres-main-rw"
+            - name: APP_DATABASE__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: username
+            - name: APP_DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: password
+            - name: APP_SERVER__HOST
+              value: "0.0.0.0"
+            - name: APP_SERVER__PORT
+              value: "8032"
+            - name: APP_SERVER__NETCODE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: netcode-secret
+                  key: private-key
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: game-provisioner
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: game-provisioner.${DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: game-provisioner
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - game-provisioner.${DOMAIN}
+      secretName: whoami-tls-app
