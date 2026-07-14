@@ -95,7 +95,7 @@ spec:
             - name: APP_TELEMETRY__TRACING_FORMAT
               value: json
             - name: APP_NATS__URL
-              value: "nats://nats.nats.svc.cluster.local:4222"
+              value: "nats://nats.nats-nats.svc.cluster.local:4222"
             - name: APP_TELEMETRY__OTEL_EXPORTER_ENDPOINT 
               value: http://alloy.monitoring.svc.cluster.local:4317
 ---
