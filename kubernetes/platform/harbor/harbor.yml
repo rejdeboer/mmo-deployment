@@ -23,8 +23,6 @@ spec:
         name: harbor
         namespace: flux-system
       interval: 1h
-  install:
-    createNamespace: true
 
   values:
     externalURL: https://harbor.${DOMAIN}
