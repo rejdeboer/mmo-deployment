@@ -117,3 +117,20 @@ resource "vault_kv_secret_v2" "alertmanager" {
   })
 }
 
+resource "random_password" "harbor_admin_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "harbor_secret_key" {
+  length = 16
+}
+
+resource "vault_kv_secret_v2" "harbor_credentials" {
+  mount = vault_mount.kv.path
+  name  = "infrastructure/harbor-credentials"
+  data_json = jsonencode({
+    admin_password = random_password.harbor_admin_password.result
+    secret_key     = random_password.harbor_secret_key.result
+  })
+}
