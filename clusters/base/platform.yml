@@ -4,8 +4,6 @@ metadata:
   name: platform-cert-manager
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: system-external-secrets-config
   interval: 1h
   retryInterval: 2m
   timeout: 10m
@@ -28,6 +26,7 @@ metadata:
 spec:
   dependsOn:
     - name: platform-cert-manager
+    - name: system-external-secrets-config
   interval: 1h
   retryInterval: 2m
   timeout: 5m
@@ -119,6 +118,8 @@ spec:
     - name: system-external-secrets-config
     - name: system-crds
     - name: system-namespaces
+    - name: system-ingress
+    - name: platform-cert-manager-config
   interval: 1h
   retryInterval: 2m
   timeout: 10m
