@@ -15,7 +15,12 @@ spec:
   values:
     admin:
       existingSecret: grafana-admin
-    grafana.ini:
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - grafana.${DOMAIN}
+      grafana.ini:
       server:
         domain: grafana.${DOMAIN}
     sidecar:
