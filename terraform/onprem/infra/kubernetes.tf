@@ -56,6 +56,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
       host        = self.ipv4_addresses[1][0]
     }
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
@@ -83,9 +87,15 @@ resource "proxmox_virtual_environment_file" "k3s_cloud_config" {
     packages:
       - qemu-guest-agent
       - curl
+    write_files:
+      - path: /etc/sysctl.d/99-inotify.conf
+        content: |
+          fs.inotify.max_user_instances = 1024
+          fs.inotify.max_user_watches = 524288
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
+      - sysctl --system
       - curl -sfL https://get.k3s.io INSTALL_K3S_EXEC="server --cluster-init --disable=servicelb" | sh -s - server --bind-address 192.168.1.50
       - echo "done" > /tmp/cloud-config.done
     EOF
