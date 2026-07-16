@@ -26,6 +26,7 @@ locals {
   github_org               = "rejdeboer"
   github_server_repository = "mmo-server"
   harbor_username          = "admin"
+  harbor_registry          = "harbor.rejdeboer.com"
 }
 
 provider "github" {
@@ -34,7 +35,7 @@ provider "github" {
 }
 
 provider "harbor" {
-  url      = "https://harbor.rejdeboer.com"
+  url      = "https://${local.harbor_registry}"
   username = local.harbor_username
   password = ephemeral.vault_kv_secret_v2.harbor_credentials.data["admin_password"]
 }
@@ -99,4 +100,10 @@ resource "github_actions_variable" "harbor_project" {
   repository    = local.github_server_repository
   variable_name = "HARBOR_PROJECT"
   value         = harbor_project.game.name
+}
+
+resource "github_actions_variable" "harbor_registry" {
+  repository    = local.github_server_repository
+  variable_name = "HARBOR_REGISTRY"
+  value         = local.harbor_registry
 }
