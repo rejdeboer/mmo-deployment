@@ -32,8 +32,6 @@ spec:
         hosts:
           core: harbor.${DOMAIN}
         className: traefik
-        annotations:
-          ingress.kubernetes.io/ssl-redirect: "true"
       tls:
         certSource: none
 

@@ -134,3 +134,11 @@ resource "vault_kv_secret_v2" "harbor_credentials" {
     secret_key     = random_password.harbor_secret_key.result
   })
 }
+
+resource "vault_kv_secret_v2" "github_pat" {
+  mount = vault_mount.kv.path
+  name  = "cicd/github"
+  data_json = jsonencode({
+    pat = var.github_token
+  })
+}

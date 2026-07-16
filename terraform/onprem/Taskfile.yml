@@ -36,6 +36,22 @@ tasks:
     cmds:
       - terraform apply -auto-approve
 
+  apply-apps-config:
+    dir: ./apps-config
+    vars:
+      VAULT_ADDR:
+        sh: terraform -chdir=../infra output -raw vault_address
+      VAULT_TOKEN:
+        sh: jq -r .root_token {{.VAULT_KEY_FILE}}
+      VAULT_MOUNT_PATH:
+        sh: terraform -chdir=../platform output -raw vault_mount_path
+    env:
+      TF_VAR_vault_address: "{{.VAULT_ADDR}}"
+      TF_VAR_vault_token: "{{.VAULT_TOKEN}}"
+      TF_VAR_vault_mount_path: "{{.VAULT_MOUNT_PATH}}"
+    cmds:
+      - terraform apply -auto-approve
+
   vault-init:
     desc: "Initialize Vault"
     vars:
