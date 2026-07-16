@@ -228,8 +228,8 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: harbor-credentials
-  namespace: harbor
+  name: zot-credentials
+  namespace: zot
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -237,15 +237,48 @@ spec:
     name: vault-backend
 
   target:
-    name: harbor-credentials
+    name: zot-credentials
     creationPolicy: Owner
 
   data:
-  - secretKey: HARBOR_ADMIN_PASSWORD
+  - secretKey: htpasswd
     remoteRef:
-      key: infrastructure/harbor-credentials
-      property: admin_password
-  - secretKey: secretKey
+      key: infrastructure/zot-credentials
+      property: htpasswd
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: zot-registry-credentials
+  namespace: flux-system
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+
+  target:
+    name: zot-registry-credentials
+    creationPolicy: Owner
+    template:
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: |
+          {
+            "auths": {
+              "registry.${DOMAIN}": {
+                "username": "{{ .username }}",
+                "password": "{{ .password }}"
+              }
+            }
+          }
+
+  data:
+  - secretKey: username
     remoteRef:
-      key: infrastructure/harbor-credentials
-      property: secret_key
+      key: infrastructure/zot-credentials
+      property: username
+  - secretKey: password
+    remoteRef:
+      key: infrastructure/zot-credentials
+      property: password

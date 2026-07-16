@@ -11,10 +11,6 @@ terraform {
       source  = "integrations/github"
       version = "6.13.0"
     }
-    harbor = {
-      source  = "goharbor/harbor"
-      version = "3.12.1"
-    }
     vault = {
       source  = "hashicorp/vault"
       version = "5.5.0"
@@ -25,8 +21,6 @@ terraform {
 locals {
   github_org               = "rejdeboer"
   github_server_repository = "mmo-server"
-  harbor_username          = "admin"
-  harbor_registry          = "harbor.rejdeboer.com"
 }
 
 provider "github" {
@@ -34,20 +28,14 @@ provider "github" {
   token = ephemeral.vault_kv_secret_v2.github.data["pat"]
 }
 
-provider "harbor" {
-  url      = "https://${local.harbor_registry}"
-  username = local.harbor_username
-  password = ephemeral.vault_kv_secret_v2.harbor_credentials.data["admin_password"]
-}
-
 provider "vault" {
   address = var.vault_address
   token   = var.vault_token
 }
 
-ephemeral "vault_kv_secret_v2" "harbor_credentials" {
+data "vault_kv_secret_v2" "zot_credentials" {
   mount = var.vault_mount_path
-  name  = "infrastructure/harbor-credentials"
+  name  = "infrastructure/zot-credentials"
 }
 
 ephemeral "vault_kv_secret_v2" "github" {
@@ -55,55 +43,20 @@ ephemeral "vault_kv_secret_v2" "github" {
   name  = "cicd/github"
 }
 
-resource "harbor_project" "game" {
-  name   = "game"
-  public = false
-}
-
-resource "harbor_robot_account" "cicd" {
-  name        = "cicd-robot"
-  level       = "system"
-  description = "Managed by Terraform"
-
-  permissions {
-    access {
-      action   = "push"
-      resource = "repository"
-    }
-    kind      = "project"
-    namespace = "*"
-  }
-
-  permissions {
-    access {
-      action   = "pull"
-      resource = "repository"
-    }
-    kind      = "project"
-    namespace = "*"
-  }
-}
-
-resource "github_actions_secret" "harbor_user" {
+resource "github_actions_secret" "registry_username" {
   repository  = local.github_server_repository
-  secret_name = "HARBOR_USERNAME"
-  value       = harbor_robot_account.cicd.full_name
+  secret_name = "REGISTRY_USERNAME"
+  value       = data.vault_kv_secret_v2.zot_credentials.data["username"]
 }
 
-resource "github_actions_secret" "harbor_password" {
+resource "github_actions_secret" "registry_password" {
   repository  = local.github_server_repository
-  secret_name = "HARBOR_PASSWORD"
-  value       = harbor_robot_account.cicd.secret
+  secret_name = "REGISTRY_PASSWORD"
+  value       = data.vault_kv_secret_v2.zot_credentials.data["password"]
 }
 
-resource "github_actions_variable" "harbor_project" {
+resource "github_actions_variable" "registry_url" {
   repository    = local.github_server_repository
-  variable_name = "HARBOR_PROJECT"
-  value         = harbor_project.game.name
-}
-
-resource "github_actions_variable" "harbor_registry" {
-  repository    = local.github_server_repository
-  variable_name = "HARBOR_REGISTRY"
-  value         = local.harbor_registry
+  variable_name = "REGISTRY_URL"
+  value         = "registry.rejdeboer.com"
 }

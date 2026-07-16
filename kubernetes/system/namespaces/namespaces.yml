@@ -18,4 +18,4 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: harbor
+  name: zot

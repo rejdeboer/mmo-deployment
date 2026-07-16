@@ -117,22 +117,23 @@ resource "vault_kv_secret_v2" "alertmanager" {
   })
 }
 
-resource "random_password" "harbor_admin_password" {
+resource "random_password" "zot_password" {
   length  = 32
   special = false
 }
 
-resource "random_password" "harbor_secret_key" {
-  length = 16
-}
-
-resource "vault_kv_secret_v2" "harbor_credentials" {
+resource "vault_kv_secret_v2" "zot_credentials" {
   mount = vault_mount.kv.path
-  name  = "infrastructure/harbor-credentials"
+  name  = "infrastructure/zot-credentials"
   data_json = jsonencode({
-    admin_password = random_password.harbor_admin_password.result
-    secret_key     = random_password.harbor_secret_key.result
+    username = "admin"
+    password = random_password.zot_password.result
+    htpasswd = "admin:${bcrypt(random_password.zot_password.result)}"
   })
+
+  lifecycle {
+    ignore_changes = [data_json]
+  }
 }
 
 resource "vault_kv_secret_v2" "github_pat" {

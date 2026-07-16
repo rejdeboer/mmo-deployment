@@ -28,7 +28,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-db-migration
-    - name: platform-harbor
+    - name: platform-zot
     - name: platform-cnpg-config
     - name: platform-agones
     - name: platform-nats

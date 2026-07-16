@@ -4,17 +4,21 @@ metadata:
   name: db-migration
   namespace: flux-system
 spec:
-  image: rejdeboer/game-db-migration
+  image: registry.${DOMAIN}/game/game-db-migration
   interval: 5m0s
+  secretRef:
+    name: zot-registry-credentials
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
-  name: game-provisioner 
+  name: game-provisioner
   namespace: flux-system
 spec:
-  image: rejdeboer/game-provisioner
+  image: registry.${DOMAIN}/game/game-provisioner
   interval: 5m0s
+  secretRef:
+    name: zot-registry-credentials
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
@@ -22,8 +26,10 @@ metadata:
   name: game-server
   namespace: flux-system
 spec:
-  image: rejdeboer/game-server
+  image: registry.${DOMAIN}/game/game-server
   interval: 5m0s
+  secretRef:
+    name: zot-registry-credentials
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
@@ -31,6 +37,7 @@ metadata:
   name: web-server
   namespace: flux-system
 spec:
-  image: rejdeboer/web-server
+  image: registry.${DOMAIN}/game/web-server
   interval: 5m0s
-
+  secretRef:
+    name: zot-registry-credentials
