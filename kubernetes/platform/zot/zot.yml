@@ -34,6 +34,8 @@ spec:
       className: traefik
       hosts:
         - host: registry.${DOMAIN}
+          paths:
+            - path: /
 
     persistence: true
     pvc:
