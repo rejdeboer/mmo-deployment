@@ -13,5 +13,5 @@ images:
     newName: rejdeboer/game-server # {"$imagepolicy": "flux-system:game-server:name"}
     newTag: main-816000e-1781722775 # {"$imagepolicy": "flux-system:game-server:tag"}
   - name: rejdeboer/web-server
-    newName: rejdeboer/web-server # {"$imagepolicy": "flux-system:web-server:name"}
+    newName: registry.rejdeboer.com/game/web-server # {"$imagepolicy": "flux-system:web-server:name"}
     newTag: main-816000e-1781723463 # {"$imagepolicy": "flux-system:web-server:tag"}
