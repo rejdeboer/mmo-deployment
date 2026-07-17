@@ -44,5 +44,4 @@ locals {
   github_runner_ip         = "192.168.1.54"
   github_org               = "rejdeboer"
   github_server_repository = "mmo-server"
-  infra_domain             = "rejdeboer.com"
 }

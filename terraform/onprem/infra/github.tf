@@ -51,7 +51,6 @@ resource "proxmox_virtual_environment_vm" "github_runner" {
   initialization {
     dns {
       servers = [local.gateway_ip]
-      domain  = local.infra_domain
     }
 
     ip_config {
@@ -115,6 +114,7 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
 
+      # Install dependencies
       - cd home/debian
       - sudo apt update && sudo apt install -y perl libicu-dev unzip jq wget build-essential ca-certificates python3 
 

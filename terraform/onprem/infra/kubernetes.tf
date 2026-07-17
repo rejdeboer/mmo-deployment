@@ -32,6 +32,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   }
 
   initialization {
+    dns {
+      servers = [local.gateway_ip]
+    }
+
     ip_config {
       ipv4 {
         address = "${local.kubernetes_ip}/24"
@@ -55,10 +59,6 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
       private_key = file(var.ssh_private_key_path)
       host        = self.ipv4_addresses[1][0]
     }
-  }
-
-  lifecycle {
-    prevent_destroy = true
   }
 }
 
