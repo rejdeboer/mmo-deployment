@@ -49,6 +49,11 @@ resource "proxmox_virtual_environment_vm" "github_runner" {
   }
 
   initialization {
+    dns {
+      servers = [local.gateway_ip]
+      domain  = local.infra_domain
+    }
+
     ip_config {
       ipv4 {
         address = "${local.github_runner_ip}/24"
@@ -137,14 +142,14 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
 
 resource "terraform_data" "github_runner_cleanup" {
   triggers_replace = {
-    vm_id = proxmox_virtual_environment_vm.github_runner.id
-    vm_ip = local.github_runner_ip
+    vm_id        = proxmox_virtual_environment_vm.github_runner.id
+    vm_ip        = local.github_runner_ip
     github_token = var.github_token
     api_endpoint = "https://api.github.com/repos/${local.github_org}/${local.github_server_repository}/actions/runners/remove-token"
   }
 
   provisioner "local-exec" {
-    when       = destroy
+    when = destroy
     # on_failure = continue # Ensures Proxmox still deletes if GitHub API fails
 
     # Fetches an ephemeral removal token and triggers the remove command via SSH

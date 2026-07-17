@@ -55,8 +55,8 @@ resource "github_actions_secret" "registry_password" {
   value       = data.vault_kv_secret_v2.zot_credentials.data["password"]
 }
 
-resource "github_actions_variable" "registry_url" {
+resource "github_actions_variable" "registry" {
   repository    = local.github_server_repository
-  variable_name = "REGISTRY_URL"
+  variable_name = "REGISTRY"
   value         = "registry.rejdeboer.com"
 }
