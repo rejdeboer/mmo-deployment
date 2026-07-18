@@ -7,6 +7,8 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      imagePullSecrets:
+      - name: zot-registry-credentials
       containers:
       - name: migration
         image: registry.rejdeboer.com/game/game-db-migration:main-bde7a1f-1784318194 # {"$imagepolicy": "flux-system:db-migration"}

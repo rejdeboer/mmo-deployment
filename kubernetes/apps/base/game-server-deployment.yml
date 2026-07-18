@@ -28,6 +28,8 @@ spec:
           labels:
             app: game-server
         spec:
+          imagePullSecrets:
+          - name: zot-registry-credentials
           containers:
           - name: game-server
             image: rejdeboer/game-server:main-74bc879-1763324843 

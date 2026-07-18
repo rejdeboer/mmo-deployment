@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "github_runner" {
   }
 
   memory {
-    dedicated = 8192
+    dedicated = 12288
   }
 
   agent {
@@ -113,6 +113,13 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
+
+      # Create swap
+      - fallocate -l 4G /swapfile
+      - chmod 600 /swapfile
+      - mkswap /swapfile
+      - swapon /swapfile
+      - echo '/swapfile none swap sw 0 0' >> /etc/fstab
 
       # Install dependencies
       - cd home/debian

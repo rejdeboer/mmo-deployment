@@ -34,6 +34,8 @@ spec:
         app: web-server
     spec:
       serviceAccountName: web-server-sa
+      imagePullSecrets:
+      - name: zot-registry-credentials
       containers:
         - name: web-server
           image: rejdeboer/web-server:main-74bc879-1763325478 

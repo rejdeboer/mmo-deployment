@@ -29,6 +29,8 @@ spec:
       labels:
         app: game-provisioner
     spec:
+      imagePullSecrets:
+      - name: zot-registry-credentials
       containers:
         - name: game-provisioner
           image: registry.rejdeboer.com/game/game-provisioner:main-bde7a1f-1784317956 # {"$imagepolicy": "flux-system:game-provisioner"}

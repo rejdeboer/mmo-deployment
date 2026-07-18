@@ -247,38 +247,46 @@ spec:
       property: htpasswd
 ---
 apiVersion: external-secrets.io/v1
-kind: ExternalSecret
+kind: ClusterExternalSecret
 metadata:
   name: zot-registry-credentials
-  namespace: flux-system
 spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: vault-backend
+  externalSecretName: zot-registry-credentials
 
-  target:
-    name: zot-registry-credentials
-    creationPolicy: Owner
-    template:
-      type: kubernetes.io/dockerconfigjson
-      data:
-        .dockerconfigjson: |
-          {
-            "auths": {
-              "registry.${DOMAIN}": {
-                "username": "{{ .username }}",
-                "password": "{{ .password }}"
+  refreshTime: 5m
+
+  namespaceSelector:
+    matchLabels:
+      inject-registry-credentials: "true"
+
+  externalSecretSpec:
+    refreshInterval: 1h
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+
+    target:
+      name: zot-registry-credentials
+      creationPolicy: Owner
+      template:
+        type: kubernetes.io/dockerconfigjson
+        data:
+          .dockerconfigjson: |
+            {
+              "auths": {
+                "registry.${DOMAIN}": {
+                  "username": "{{ .username }}",
+                  "password": "{{ .password }}"
+                }
               }
             }
-          }
 
-  data:
-  - secretKey: username
-    remoteRef:
-      key: infrastructure/zot-credentials
-      property: username
-  - secretKey: password
-    remoteRef:
-      key: infrastructure/zot-credentials
-      property: password
+    data:
+    - secretKey: username
+      remoteRef:
+        key: infrastructure/zot-credentials
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: infrastructure/zot-credentials
+        property: password
