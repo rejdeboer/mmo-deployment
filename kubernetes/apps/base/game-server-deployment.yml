@@ -43,7 +43,7 @@ spec:
             ports:
             - containerPort: 7777
               protocol: UDP
-            volumeMounts:
+            volumeMounts: []
             # - name: assets-volume
             #   mountPath: /app/assets
             envFrom:
@@ -75,7 +75,7 @@ spec:
               value: json
             - name: APP_TRACING__OTEL_EXPORTER_ENDPOINT
               value: http://alloy.monitoring.svc.cluster.local:4317
-          volumes:
+          volumes: []
           # - name: assets-volume
           #   configMap:
           #     name: assets-config
