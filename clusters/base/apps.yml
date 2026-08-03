@@ -32,7 +32,6 @@ spec:
     - name: platform-cnpg-config
     - name: platform-agones
     - name: platform-nats
-    - name: platform-image-automation
   interval: 10m
   sourceRef:
     kind: GitRepository
