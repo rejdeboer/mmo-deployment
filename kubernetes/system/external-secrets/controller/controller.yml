@@ -42,6 +42,8 @@ spec:
   releaseName: external-secrets
   targetNamespace: external-secrets
   interval: 10m
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: external-secrets
