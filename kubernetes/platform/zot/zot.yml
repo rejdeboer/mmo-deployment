@@ -14,8 +14,8 @@ metadata:
   namespace: zot
 spec:
   interval: 30m
-  driftCorrection:
-    mode: Apply
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       version: "0.1.122"
