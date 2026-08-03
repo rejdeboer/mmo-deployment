@@ -109,14 +109,6 @@ resource "vault_kv_secret_v2" "grafana_admin" {
   })
 }
 
-resource "vault_kv_secret_v2" "alertmanager" {
-  mount = vault_mount.kv.path
-  name  = "infrastructure/alertmanager"
-  data_json = jsonencode({
-    discord_webhook_url = var.alertmanager_discord_webhook_url
-  })
-}
-
 resource "random_password" "zot_password" {
   length  = 32
   special = false

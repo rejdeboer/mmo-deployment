@@ -34,8 +34,3 @@ variable "garage_admin_token" {
   type      = string
   sensitive = true
 }
-
-variable "alertmanager_discord_webhook_url" {
-  type      = string
-  sensitive = true
-}
