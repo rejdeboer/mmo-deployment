@@ -34,7 +34,7 @@ tasks:
       TF_VAR_vault_token: "{{.VAULT_TOKEN}}"
       TF_VAR_garage_admin_token: "{{.GARAGE_TOKEN}}"
     cmds:
-      - terraform apply -auto-approve
+      - terraform apply -lock=false -auto-approve
 
   apply-apps-config:
     dir: ./apps-config

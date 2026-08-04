@@ -3,7 +3,7 @@ provider "flux" {
     config_path = local.kubeconfig_path
   }
   git = {
-    url    = "ssh://git@github.com/${local.github_org}/${local.github_repository}.git"
+    url    = "ssh://git@github.com/${local.github_owner}/${local.github_repository}.git"
     branch = local.github_branch
     ssh = {
       username    = "git"
@@ -21,5 +21,20 @@ resource "flux_bootstrap_git" "this" {
     "image-reflector-controller",
     "image-automation-controller"
   ]
+  kustomization_override = <<-EOT
+    apiVersion: kustomize.config.k8s.io/v1beta1
+    kind: Kustomization
+    resources:
+      - gotk-components.yaml
+      - gotk-sync.yaml
+    patches:
+      - target:
+          kind: Namespace
+          name: flux-system
+        patch: |
+          - op: add
+            path: /metadata/labels/inject-registry-credentials
+            value: "true"
+  EOT
 }
 

@@ -39,7 +39,8 @@ terraform {
 }
 
 locals {
-  github_org        = "rejdeboer"
+  github_owner      = "rejdeboer"
+  github_org        = "rejdeboer-lab"
   github_repository = "mmo-deployment"
   github_branch     = "main"
 

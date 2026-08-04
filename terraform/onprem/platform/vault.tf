@@ -7,6 +7,31 @@ resource "vault_auth_backend" "kubernetes" {
   type = "kubernetes"
 }
 
+resource "vault_auth_backend" "userpass" {
+  type = "userpass"
+}
+
+resource "vault_policy" "admin" {
+  name = "admin"
+
+  policy = <<EOT
+path "*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+EOT
+}
+
+resource "vault_generic_endpoint" "rejdeboer" {
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/rejdeboer"
+  ignore_absent_fields = true
+
+  data_json = jsonencode({
+    policies = vault_policy.admin.name
+    password = var.vault_admin_password
+  })
+}
+
 resource "vault_kubernetes_auth_backend_config" "config" {
   backend                = vault_auth_backend.kubernetes.path
   kubernetes_host        = local.kube_cluster_config.server
