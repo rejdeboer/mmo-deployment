@@ -23,6 +23,9 @@ spec:
       - name: default
         protocol: UDP
         containerPort: 7777
+      - name: metrics
+        protocol: TCP
+        containerPort: 9000
       template:
         metadata:
           labels:
@@ -43,6 +46,9 @@ spec:
             ports:
             - containerPort: 7777
               protocol: UDP
+            - name: metrics
+              containerPort: 9000
+              protocol: TCP
             volumeMounts: []
             # - name: assets-volume
             #   mountPath: /app/assets
