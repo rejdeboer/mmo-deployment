@@ -20,6 +20,8 @@ metadata:
   name: longhorn-release
   namespace: longhorn-system
 spec:
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: longhorn
