@@ -123,7 +123,8 @@ resource "proxmox_virtual_environment_file" "github_runner_cloud_config" {
 
       # Install dependencies
       - cd home/debian
-      - sudo apt update && sudo apt install -y perl libicu-dev unzip jq wget build-essential ca-certificates python3 
+      - sudo apt update && sudo apt install -y perl libicu-dev unzip jq wget build-essential ca-certificates python3 git-lfs
+      - git lfs install
 
       # Install Docker
       - install -m 0755 -d /etc/apt/keyrings
