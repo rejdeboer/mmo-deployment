@@ -224,9 +224,8 @@ func (r *RealmReconciler) reconcileZoneDeployment(ctx context.Context, realm *mm
 			if c.ReadinessProbe == nil {
 				c.ReadinessProbe = &corev1.Probe{
 					ProbeHandler: corev1.ProbeHandler{
-						HTTPGet: &corev1.HTTPGetAction{
-							Path: "/readyz",
-							Port: intstr.FromInt32(8080),
+						TCPSocket: &corev1.TCPSocketAction{
+							Port: intstr.FromInt32(metricsPort),
 						},
 					},
 					InitialDelaySeconds: 5,
