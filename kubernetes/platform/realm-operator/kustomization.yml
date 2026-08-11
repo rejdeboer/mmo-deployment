@@ -4,5 +4,5 @@ resources:
   - ../../../operator/config/default
 images:
   - name: controller
-    newName: registry.${DOMAIN}/rejdeboer/realm-operator
+    newName: ghcr.io/rejdeboer/realm-operator
     newTag: latest

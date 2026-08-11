@@ -22,7 +22,6 @@ locals {
   github_org                   = "rejdeboer"
   github_server_repository     = "mmo-server"
   github_deployment_repository = "mmo-deployment"
-  registry_host                = "registry.rejdeboer.com"
 }
 
 provider "github" {
@@ -45,38 +44,20 @@ ephemeral "vault_kv_secret_v2" "github" {
   name  = "cicd/github"
 }
 
-resource "github_actions_secret" "server_registry_username" {
+resource "github_actions_secret" "registry_username" {
   repository  = local.github_server_repository
   secret_name = "REGISTRY_USERNAME"
   value       = data.vault_kv_secret_v2.zot_credentials.data["username"]
 }
 
-resource "github_actions_secret" "server_registry_password" {
+resource "github_actions_secret" "registry_password" {
   repository  = local.github_server_repository
   secret_name = "REGISTRY_PASSWORD"
   value       = data.vault_kv_secret_v2.zot_credentials.data["password"]
 }
 
-resource "github_actions_variable" "server_registry" {
+resource "github_actions_variable" "registry" {
   repository    = local.github_server_repository
   variable_name = "REGISTRY"
-  value         = local.registry_host
-}
-
-resource "github_actions_secret" "deployment_registry_username" {
-  repository  = local.github_deployment_repository
-  secret_name = "REGISTRY_USERNAME"
-  value       = data.vault_kv_secret_v2.zot_credentials.data["username"]
-}
-
-resource "github_actions_secret" "deployment_registry_password" {
-  repository  = local.github_deployment_repository
-  secret_name = "REGISTRY_PASSWORD"
-  value       = data.vault_kv_secret_v2.zot_credentials.data["password"]
-}
-
-resource "github_actions_variable" "deployment_registry" {
-  repository    = local.github_deployment_repository
-  variable_name = "REGISTRY"
-  value         = local.registry_host
+  value         = "registry.rejdeboer.com"
 }
