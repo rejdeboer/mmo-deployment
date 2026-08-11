@@ -41,3 +41,12 @@ spec:
   interval: 5m0s
   secretRef:
     name: zot-registry-credentials
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: realm-operator
+  namespace: flux-system
+spec:
+  image: ghcr.io/rejdeboer/realm-operator
+  interval: 5m0s

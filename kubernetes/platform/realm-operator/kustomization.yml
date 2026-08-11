@@ -4,5 +4,5 @@ resources:
   - ../../../operator/config/default
 images:
   - name: controller
-    newName: ghcr.io/rejdeboer/realm-operator
-    newTag: latest
+    newName: ghcr.io/rejdeboer/realm-operator # {"$imagepolicy": "flux-system:realm-operator:name"}
+    newTag: main-0000000-0000000000 # {"$imagepolicy": "flux-system:realm-operator:tag"}
