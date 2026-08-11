@@ -44,6 +44,11 @@ spec:
             - configMapRef:
                 name: game-server-config
           env:
+            - name: APP_SERVER__NETCODE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: netcode-secret
+                  key: private-key
             - name: APP_DATABASE__PORT
               value: "5432"
             - name: APP_DATABASE__NAME
