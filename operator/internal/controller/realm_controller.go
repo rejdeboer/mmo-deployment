@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -11,6 +12,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/client-go/discovery"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -25,12 +27,16 @@ const (
 	zoneNameLabel   = "mmo.rejdeboer.com/zone-name"
 	realmOwnerLabel = "mmo.rejdeboer.com/realm"
 	layerLabel      = "mmo.rejdeboer.com/layer"
+
+	metricsPortName = "metrics"
+	metricsPort     = int32(9000)
 )
 
 // RealmReconciler reconciles a Realm object
 type RealmReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme            *runtime.Scheme
+	MonitoringEnabled bool
 }
 
 //+kubebuilder:rbac:groups=mmo.rejdeboer.com,resources=realms,verbs=get;list;watch;create;update;patch;delete
@@ -38,6 +44,9 @@ type RealmReconciler struct {
 //+kubebuilder:rbac:groups=mmo.rejdeboer.com,resources=realms/finalizers,verbs=update
 //+kubebuilder:rbac:groups=mmo.rejdeboer.com,resources=zonesets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
+//+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=monitoring.coreos.com,resources=servicemonitors,verbs=get;list;watch;create;update;patch;delete
 
 func (r *RealmReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := logf.FromContext(ctx)
@@ -94,6 +103,18 @@ func (r *RealmReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	if err := r.cleanupOrphanedResources(ctx, &realm, desiredZones); err != nil {
 		log.Error(err, "failed to clean up orphaned resources")
 		return ctrl.Result{}, err
+	}
+
+	// Reconcile metrics Service and ServiceMonitor
+	if err := r.reconcileMetricsService(ctx, &realm); err != nil {
+		log.Error(err, "failed to reconcile metrics service")
+		return ctrl.Result{}, err
+	}
+	if r.MonitoringEnabled {
+		if err := r.reconcileServiceMonitor(ctx, &realm); err != nil {
+			log.Error(err, "failed to reconcile service monitor")
+			return ctrl.Result{}, err
+		}
 	}
 
 	// Update status
@@ -178,6 +199,11 @@ func (r *RealmReconciler) reconcileZoneDeployment(ctx context.Context, realm *mm
 					ContainerPort: layerPort,
 					HostPort:      layerPort,
 					Protocol:      corev1.ProtocolUDP,
+				},
+				{
+					Name:          metricsPortName,
+					ContainerPort: metricsPort,
+					Protocol:      corev1.ProtocolTCP,
 				},
 			}
 		}
@@ -276,6 +302,65 @@ func (r *RealmReconciler) getZoneStatus(ctx context.Context, realm *mmov1alpha1.
 	return status
 }
 
+func (r *RealmReconciler) reconcileMetricsService(ctx context.Context, realm *mmov1alpha1.Realm) error {
+	svc := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      fmt.Sprintf("%s-zone-metrics", realm.Name),
+			Namespace: realm.Namespace,
+		},
+	}
+
+	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, svc, func() error {
+		svc.Labels = map[string]string{
+			realmOwnerLabel: realm.Name,
+			"app":           fmt.Sprintf("%s-zone-metrics", realm.Name),
+		}
+		svc.Spec.Selector = map[string]string{
+			realmOwnerLabel: realm.Name,
+		}
+		svc.Spec.ClusterIP = corev1.ClusterIPNone // headless — Prometheus scrapes each pod individually
+		svc.Spec.Ports = []corev1.ServicePort{
+			{
+				Name:       metricsPortName,
+				Protocol:   corev1.ProtocolTCP,
+				Port:       metricsPort,
+				TargetPort: intstr.FromString(metricsPortName),
+			},
+		}
+		return controllerutil.SetControllerReference(realm, svc, r.Scheme)
+	})
+	return err
+}
+
+func (r *RealmReconciler) reconcileServiceMonitor(ctx context.Context, realm *mmov1alpha1.Realm) error {
+	sm := &monitoringv1.ServiceMonitor{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      fmt.Sprintf("%s-zone-metrics", realm.Name),
+			Namespace: realm.Namespace,
+		},
+	}
+
+	_, err := controllerutil.CreateOrUpdate(ctx, r.Client, sm, func() error {
+		sm.Labels = map[string]string{
+			realmOwnerLabel: realm.Name,
+		}
+		sm.Spec.Selector = metav1.LabelSelector{
+			MatchLabels: map[string]string{
+				"app": fmt.Sprintf("%s-zone-metrics", realm.Name),
+			},
+		}
+		sm.Spec.Endpoints = []monitoringv1.Endpoint{
+			{
+				Port:     metricsPortName,
+				Path:     "/",
+				Interval: monitoringv1.Duration("15s"),
+			},
+		}
+		return controllerutil.SetControllerReference(realm, sm, r.Scheme)
+	})
+	return err
+}
+
 func (r *RealmReconciler) cleanupOrphanedResources(ctx context.Context, realm *mmov1alpha1.Realm, desiredZones map[string]mmov1alpha1.ZoneSpec) error {
 	var deployments appsv1.DeploymentList
 	if err := r.List(ctx, &deployments, client.InNamespace(realm.Namespace), client.MatchingLabels{
@@ -321,12 +406,18 @@ func (r *RealmReconciler) setCondition(realm *mmov1alpha1.Realm, condType string
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *RealmReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+	builder := ctrl.NewControllerManagedBy(mgr).
 		For(&mmov1alpha1.Realm{}).
 		Owns(&appsv1.Deployment{}).
+		Owns(&corev1.Service{}).
 		Watches(&mmov1alpha1.ZoneSet{}, handler.EnqueueRequestsFromMapFunc(r.findRealmsForZoneSet)).
-		Named("realm").
-		Complete(r)
+		Named("realm")
+
+	if r.MonitoringEnabled {
+		builder = builder.Owns(&monitoringv1.ServiceMonitor{})
+	}
+
+	return builder.Complete(r)
 }
 
 // findRealmsForZoneSet maps a ZoneSet change to all Realms that reference it
@@ -368,4 +459,21 @@ func layerHostPort(basePort int32, layer int32) int32 {
 		return basePort
 	}
 	return basePort + (layer-1)*portStride
+}
+
+// HasMonitoringCRDs checks whether the monitoring.coreos.com API group is
+// available on the cluster via API discovery. This allows the operator to
+// gracefully skip ServiceMonitor creation when the Prometheus Operator CRDs
+// are not installed.
+func HasMonitoringCRDs(dc discovery.DiscoveryInterface) bool {
+	resources, err := dc.ServerResourcesForGroupVersion("monitoring.coreos.com/v1")
+	if err != nil {
+		return false
+	}
+	for _, r := range resources.APIResources {
+		if r.Kind == "ServiceMonitor" {
+			return true
+		}
+	}
+	return false
 }
