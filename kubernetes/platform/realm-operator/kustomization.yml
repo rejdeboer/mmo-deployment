@@ -5,4 +5,4 @@ resources:
 images:
   - name: controller
     newName: ghcr.io/rejdeboer/realm-operator # {"$imagepolicy": "flux-system:realm-operator:name"}
-    newTag: main-0000000-0000000000 # {"$imagepolicy": "flux-system:realm-operator:tag"}
+    newTag: main-554cc99-1786452354 # {"$imagepolicy": "flux-system:realm-operator:tag"}
