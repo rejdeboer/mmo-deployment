@@ -2,6 +2,13 @@ version: '3'
 
 dotenv: ['./.env']
 
+tasks:
+  reconcile:
+    desc: Trigger immediate Flux reconciliation
+    cmds:
+      - flux reconcile source git flux-system
+      - flux reconcile kustomization flux-system
+
 includes:
   onprem:
     taskfile: ./terraform/onprem/Taskfile.yml
