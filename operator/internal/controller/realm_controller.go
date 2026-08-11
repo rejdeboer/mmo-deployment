@@ -185,6 +185,15 @@ func (r *RealmReconciler) reconcileZoneDeployment(ctx context.Context, realm *mm
 				corev1.EnvVar{Name: "REALM_NAME", Value: realm.Name},
 				corev1.EnvVar{Name: "ZONE_PORT", Value: fmt.Sprintf("%d", layerPort)},
 				corev1.EnvVar{Name: "LAYER", Value: fmt.Sprintf("%d", layerNum)},
+				corev1.EnvVar{Name: "APP_SERVER__PUBLIC_PORT", Value: fmt.Sprintf("%d", layerPort)},
+				corev1.EnvVar{
+					Name: "APP_SERVER__PUBLIC_HOST",
+					ValueFrom: &corev1.EnvVarSource{
+						FieldRef: &corev1.ObjectFieldSelector{
+							FieldPath: "status.hostIP",
+						},
+					},
+				},
 			)
 			if zone.PlayerCap != nil {
 				c.Env = append(c.Env,
@@ -196,7 +205,7 @@ func (r *RealmReconciler) reconcileZoneDeployment(ctx context.Context, realm *mm
 			c.Ports = []corev1.ContainerPort{
 				{
 					Name:          "game",
-					ContainerPort: layerPort,
+					ContainerPort: 7777,
 					HostPort:      layerPort,
 					Protocol:      corev1.ProtocolUDP,
 				},

@@ -69,3 +69,5 @@ spec:
               value: json
             - name: APP_TRACING__OTEL_EXPORTER_ENDPOINT
               value: http://alloy.monitoring.svc.cluster.local:4317
+            - name: APP_SERVER__ENABLE_AGONES
+              value: "false"
