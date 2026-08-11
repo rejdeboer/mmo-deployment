@@ -1,5 +1,5 @@
-# TODO: I'm not sure if agones is the right tool for this game
-# Might need to refactor to using statefulsets later
+# Agones Fleet for instanced content (dungeons, battlegrounds, arenas).
+# Persistent open-world zones are managed by the realm operator (see realm.yml).
 apiVersion: agones.dev/v1
 kind: Fleet
 metadata:

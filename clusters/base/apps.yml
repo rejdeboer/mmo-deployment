@@ -31,6 +31,7 @@ spec:
     - name: platform-zot
     - name: platform-cnpg-config
     - name: platform-agones
+    - name: platform-realm-operator
     - name: platform-nats
   interval: 10m
   sourceRef:

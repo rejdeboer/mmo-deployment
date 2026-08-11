@@ -1,0 +1,66 @@
+apiVersion: mmo.rejdeboer.com/v1alpha1
+kind: ZoneSet
+metadata:
+  name: azeroth
+  namespace: default
+spec:
+  zones:
+    - name: elwynn-forest
+      port: 9001
+      playerCap: 500
+    - name: stormwind
+      port: 9002
+      playerCap: 2000
+      maxLayers: 3
+    - name: westfall
+      port: 9003
+      playerCap: 500
+---
+apiVersion: mmo.rejdeboer.com/v1alpha1
+kind: Realm
+metadata:
+  name: main
+  namespace: default
+spec:
+  zoneSetRef: azeroth
+  template:
+    metadata:
+      labels:
+        app: zone-server
+    spec:
+      imagePullSecrets:
+        - name: zot-registry-credentials
+      containers:
+        - name: zone-server
+          image: rejdeboer/zone-server:latest
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          envFrom:
+            - configMapRef:
+                name: game-server-config
+          env:
+            - name: APP_DATABASE__PORT
+              value: "5432"
+            - name: APP_DATABASE__NAME
+              value: "mmo"
+            - name: APP_DATABASE__HOST
+              value: "postgres-main-rw"
+            - name: APP_DATABASE__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: username
+            - name: APP_DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: password
+            - name: APP_TRACING__FORMAT
+              value: json
+            - name: APP_TRACING__OTEL_EXPORTER_ENDPOINT
+              value: http://alloy.monitoring.svc.cluster.local:4317

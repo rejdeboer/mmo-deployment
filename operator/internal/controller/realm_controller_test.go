@@ -21,64 +21,198 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	mmov1alpha1 "github.com/rejdeboer/mmo-deployment/api/v1alpha1"
 )
 
 var _ = Describe("Realm Controller", func() {
 	Context("When reconciling a resource", func() {
-		const resourceName = "test-resource"
+		const (
+			realmName   = "test-realm"
+			zoneSetName = "test-zoneset"
+			namespace   = "default"
+		)
 
 		ctx := context.Background()
 
-		typeNamespacedName := types.NamespacedName{
-			Name:      resourceName,
-			Namespace: "default", // TODO(user):Modify as needed
-		}
-		realm := &mmov1alpha1.Realm{}
-
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind Realm")
-			err := k8sClient.Get(ctx, typeNamespacedName, realm)
-			if err != nil && errors.IsNotFound(err) {
-				resource := &mmov1alpha1.Realm{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      resourceName,
-						Namespace: "default",
+			// Create ZoneSet first
+			zoneSet := &mmov1alpha1.ZoneSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      zoneSetName,
+					Namespace: namespace,
+				},
+				Spec: mmov1alpha1.ZoneSetSpec{
+					Zones: []mmov1alpha1.ZoneSpec{
+						{Name: "elwynn-forest", Port: 7001},
+						{Name: "stormwind", Port: 7002},
 					},
-					// TODO(user): Specify other spec details if needed.
+				},
+			}
+			err := k8sClient.Get(ctx, types.NamespacedName{Name: zoneSetName, Namespace: namespace}, zoneSet)
+			if err != nil && errors.IsNotFound(err) {
+				Expect(k8sClient.Create(ctx, zoneSet)).To(Succeed())
+			}
+
+			// Create Realm
+			realm := &mmov1alpha1.Realm{}
+			err = k8sClient.Get(ctx, types.NamespacedName{Name: realmName, Namespace: namespace}, realm)
+			if err != nil && errors.IsNotFound(err) {
+				realm = &mmov1alpha1.Realm{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      realmName,
+						Namespace: namespace,
+					},
+					Spec: mmov1alpha1.RealmSpec{
+						ZoneSetRef: zoneSetName,
+						Template: corev1.PodTemplateSpec{
+							ObjectMeta: metav1.ObjectMeta{
+								Labels: map[string]string{"app": "zone-server"},
+							},
+							Spec: corev1.PodSpec{
+								Containers: []corev1.Container{
+									{
+										Name:  "zone-server",
+										Image: "zone-server:test",
+									},
+								},
+							},
+						},
+					},
 				}
-				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
+				Expect(k8sClient.Create(ctx, realm)).To(Succeed())
 			}
 		})
 
 		AfterEach(func() {
-			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &mmov1alpha1.Realm{}
-			err := k8sClient.Get(ctx, typeNamespacedName, resource)
-			Expect(err).NotTo(HaveOccurred())
-
-			By("Cleanup the specific resource instance Realm")
-			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
+			// Clean up realm
+			realm := &mmov1alpha1.Realm{}
+			if err := k8sClient.Get(ctx, types.NamespacedName{Name: realmName, Namespace: namespace}, realm); err == nil {
+				Expect(k8sClient.Delete(ctx, realm)).To(Succeed())
+			}
+			// Clean up zoneset
+			zoneSet := &mmov1alpha1.ZoneSet{}
+			if err := k8sClient.Get(ctx, types.NamespacedName{Name: zoneSetName, Namespace: namespace}, zoneSet); err == nil {
+				Expect(k8sClient.Delete(ctx, zoneSet)).To(Succeed())
+			}
 		})
-		It("should successfully reconcile the resource", func() {
-			By("Reconciling the created resource")
+
+		It("should create a deployment per zone with hostPort", func() {
 			controllerReconciler := &RealmReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}
 
 			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
-				NamespacedName: typeNamespacedName,
+				NamespacedName: types.NamespacedName{Name: realmName, Namespace: namespace},
 			})
 			Expect(err).NotTo(HaveOccurred())
-			// TODO(user): Add more specific assertions depending on your controller's reconciliation logic.
-			// Example: If you expect a certain status condition after reconciliation, verify it here.
+
+			// Verify deployments were created for each zone
+			zones := map[string]int32{
+				"elwynn-forest": 7001,
+				"stormwind":     7002,
+			}
+			for zoneName, expectedPort := range zones {
+				deployName := zoneDeploymentName(realmName, zoneName, 1)
+
+				var deploy appsv1.Deployment
+				err := k8sClient.Get(ctx, types.NamespacedName{Name: deployName, Namespace: namespace}, &deploy)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(deploy.Labels[zoneNameLabel]).To(Equal(zoneName))
+				Expect(deploy.Labels[realmOwnerLabel]).To(Equal(realmName))
+				Expect(*deploy.Spec.Replicas).To(Equal(int32(1)))
+
+				// Verify hostPort is set
+				containers := deploy.Spec.Template.Spec.Containers
+				Expect(containers).NotTo(BeEmpty())
+				Expect(containers[0].Ports).NotTo(BeEmpty())
+				Expect(containers[0].Ports[0].HostPort).To(Equal(expectedPort))
+				Expect(containers[0].Ports[0].Protocol).To(Equal(corev1.ProtocolUDP))
+			}
+		})
+
+		It("should set pod anti-affinity to spread zones across nodes", func() {
+			controllerReconciler := &RealmReconciler{
+				Client: k8sClient,
+				Scheme: k8sClient.Scheme(),
+			}
+
+			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
+				NamespacedName: types.NamespacedName{Name: realmName, Namespace: namespace},
+			})
+			Expect(err).NotTo(HaveOccurred())
+
+			var deploy appsv1.Deployment
+			err = k8sClient.Get(ctx, types.NamespacedName{
+				Name:      zoneDeploymentName(realmName, "elwynn-forest", 1),
+				Namespace: namespace,
+			}, &deploy)
+			Expect(err).NotTo(HaveOccurred())
+
+			affinity := deploy.Spec.Template.Spec.Affinity
+			Expect(affinity).NotTo(BeNil())
+			Expect(affinity.PodAntiAffinity).NotTo(BeNil())
+			preferred := affinity.PodAntiAffinity.PreferredDuringSchedulingIgnoredDuringExecution
+			Expect(preferred).To(HaveLen(1))
+			Expect(preferred[0].Weight).To(Equal(int32(100)))
+			Expect(preferred[0].PodAffinityTerm.TopologyKey).To(Equal("kubernetes.io/hostname"))
+			Expect(preferred[0].PodAffinityTerm.LabelSelector.MatchLabels[realmOwnerLabel]).To(Equal(realmName))
+		})
+
+		It("should set terminationGracePeriodSeconds to 120", func() {
+			controllerReconciler := &RealmReconciler{
+				Client: k8sClient,
+				Scheme: k8sClient.Scheme(),
+			}
+
+			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
+				NamespacedName: types.NamespacedName{Name: realmName, Namespace: namespace},
+			})
+			Expect(err).NotTo(HaveOccurred())
+
+			var deploy appsv1.Deployment
+			err = k8sClient.Get(ctx, types.NamespacedName{
+				Name:      zoneDeploymentName(realmName, "stormwind", 1),
+				Namespace: namespace,
+			}, &deploy)
+			Expect(err).NotTo(HaveOccurred())
+
+			gracePeriod := deploy.Spec.Template.Spec.TerminationGracePeriodSeconds
+			Expect(gracePeriod).NotTo(BeNil())
+			Expect(*gracePeriod).To(Equal(int64(120)))
+		})
+
+		It("should add a readiness probe to the zone container", func() {
+			controllerReconciler := &RealmReconciler{
+				Client: k8sClient,
+				Scheme: k8sClient.Scheme(),
+			}
+
+			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
+				NamespacedName: types.NamespacedName{Name: realmName, Namespace: namespace},
+			})
+			Expect(err).NotTo(HaveOccurred())
+
+			var deploy appsv1.Deployment
+			err = k8sClient.Get(ctx, types.NamespacedName{
+				Name:      zoneDeploymentName(realmName, "elwynn-forest", 1),
+				Namespace: namespace,
+			}, &deploy)
+			Expect(err).NotTo(HaveOccurred())
+
+			probe := deploy.Spec.Template.Spec.Containers[0].ReadinessProbe
+			Expect(probe).NotTo(BeNil())
+			Expect(probe.HTTPGet).NotTo(BeNil())
+			Expect(probe.HTTPGet.Path).To(Equal("/readyz"))
+			Expect(probe.HTTPGet.Port).To(Equal(intstr.FromInt32(8080)))
 		})
 	})
 })

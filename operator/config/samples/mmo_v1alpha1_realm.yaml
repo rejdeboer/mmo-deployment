@@ -4,6 +4,14 @@ metadata:
   labels:
     app.kubernetes.io/name: realm
     app.kubernetes.io/managed-by: kustomize
-  name: realm-sample
+  name: stormrage
 spec:
-  # TODO(user): Add fields here
+  zoneSetRef: azeroth
+  template:
+    metadata:
+      labels:
+        app: zone-server
+    spec:
+      containers:
+        - name: zone-server
+          image: ghcr.io/rejdeboer/zone-server:latest

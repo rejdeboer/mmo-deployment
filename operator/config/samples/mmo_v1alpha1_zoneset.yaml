@@ -4,6 +4,19 @@ metadata:
   labels:
     app.kubernetes.io/name: realm
     app.kubernetes.io/managed-by: kustomize
-  name: zoneset-sample
+  name: azeroth
 spec:
-  # TODO(user): Add fields here
+  zones:
+    - name: elwynn-forest
+      port: 7001
+      playerCap: 500
+    - name: stormwind
+      port: 7002
+      playerCap: 2000
+      maxLayers: 3
+    - name: westfall
+      port: 7003
+      playerCap: 500
+    - name: duskwood
+      port: 7004
+      playerCap: 300

@@ -6,4 +6,5 @@ resources:
   - game-server-config.yml
   - game-server-deployment.yml
   - ingress.yml
+  - realm.yml
   - web-server-deployment.yml

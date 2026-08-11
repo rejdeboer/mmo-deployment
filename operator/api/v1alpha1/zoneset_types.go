@@ -1,36 +1,48 @@
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type ZoneSpec struct {
+	// name is the unique identifier for this zone (e.g. "elwynn-forest", "stormwind")
 	// +required
-	Name *string `json:"name"`
+	Name string `json:"name"`
+
+	// port is the host port this zone's game server is exposed on.
+	// Must be unique across all zones in the cluster to avoid scheduling conflicts.
+	// +required
+	Port int32 `json:"port"`
+
+	// resources defines the resource requirements for this zone's pod
+	// +optional
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+
+	// playerCap is the maximum number of players allowed in this zone
+	// +optional
+	PlayerCap *int32 `json:"playerCap,omitempty"`
+
+	// maxLayers is the maximum number of concurrent layers (instances) of this zone.
+	// When player count approaches playerCap, the operator can spin up additional layers.
+	// Defaults to 1 (no layering).
+	// +optional
+	// +kubebuilder:default=1
+	// +kubebuilder:validation:Minimum=1
+	MaxLayers *int32 `json:"maxLayers,omitempty"`
 }
 
 type ZoneSetSpec struct {
+	// zones is the list of zone definitions
 	// +required
+	// +listType=map
+	// +listMapKey=name
 	Zones []ZoneSpec `json:"zones"`
 }
 
 // ZoneSetStatus defines the observed state of ZoneSet.
 type ZoneSetStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
 	// conditions represent the current state of the ZoneSet resource.
-	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
-	//
-	// Standard condition types include:
-	// - "Available": the resource is fully functional
-	// - "Progressing": the resource is being created or updated
-	// - "Degraded": the resource failed to reach or maintain its desired state
-	//
-	// The status of each condition is one of True, False, or Unknown.
 	// +listType=map
 	// +listMapKey=type
 	// +optional
@@ -40,19 +52,17 @@ type ZoneSetStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// ZoneSet is the Schema for the zonesets API
+// ZoneSet is the Schema for the zonesets API.
+// It defines a set of zones that make up a game world.
 type ZoneSet struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of ZoneSet
 	// +required
 	Spec ZoneSetSpec `json:"spec"`
 
-	// status defines the observed state of ZoneSet
 	// +optional
 	Status ZoneSetStatus `json:"status,omitempty,omitzero"`
 }

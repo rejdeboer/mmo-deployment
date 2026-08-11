@@ -5,38 +5,60 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 type RealmSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+	// zoneSetRef is the name of the ZoneSet resource that defines the zones for this realm
+	// +required
+	ZoneSetRef string `json:"zoneSetRef"`
 
-	// +required
-	ContainerPort int32 `json:"containerPort,omitempty"`
-	// +required
-	ZoneSetRef *string `json:"zoneSetRef"`
+	// template is the base pod template for zone server pods.
+	// Per-zone resource overrides from the ZoneSet will be applied on top.
 	// +required
 	Template corev1.PodTemplateSpec `json:"template"`
 }
 
+// LayerStatus represents the observed state of a single layer within a zone
+type LayerStatus struct {
+	// layer is the layer number (1-indexed)
+	Layer int32 `json:"layer"`
+
+	// address is the node IP where this layer's pod is running
+	// +optional
+	Address string `json:"address,omitempty"`
+
+	// port is the hostPort this layer is exposed on
+	// +optional
+	Port int32 `json:"port,omitempty"`
+
+	// phase is the current phase of the layer's pod (Pending, Running, Failed, etc.)
+	// +optional
+	Phase corev1.PodPhase `json:"phase,omitempty"`
+
+	// playerCount is the current number of players in this layer
+	// +optional
+	PlayerCount int32 `json:"playerCount,omitempty"`
+}
+
+// ZoneStatus represents the observed state of a single zone within a realm
+type ZoneStatus struct {
+	// name is the zone name
+	Name string `json:"name"`
+
+	// layers contains the status of each active layer for this zone
+	// +listType=map
+	// +listMapKey=layer
+	// +optional
+	Layers []LayerStatus `json:"layers,omitempty"`
+}
+
 // RealmStatus defines the observed state of Realm.
 type RealmStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+	// zones contains the status of each zone in the realm
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	Zones []ZoneStatus `json:"zones,omitempty"`
 
 	// conditions represent the current state of the Realm resource.
-	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
-	//
-	// Standard condition types include:
-	// - "Available": the resource is fully functional
-	// - "Progressing": the resource is being created or updated
-	// - "Degraded": the resource failed to reach or maintain its desired state
-	//
-	// The status of each condition is one of True, False, or Unknown.
 	// +listType=map
 	// +listMapKey=type
 	// +optional
@@ -45,20 +67,20 @@ type RealmStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Zones",type=integer,JSONPath=`.status.zones[*]`,description="Number of zones"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
-// Realm is the Schema for the realms API
+// Realm is the Schema for the realms API.
+// It represents a single game realm (e.g. "Stormrage") composed of multiple zones.
 type Realm struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of Realm
 	// +required
 	Spec RealmSpec `json:"spec"`
 
-	// status defines the observed state of Realm
 	// +optional
 	Status RealmStatus `json:"status,omitempty,omitzero"`
 }
