@@ -31,8 +31,8 @@ spec:
       imagePullSecrets:
         - name: zot-registry-credentials
       containers:
-        - name: zone-server
-          image: rejdeboer/zone-server:latest
+        - name: game-server
+          image: rejdeboer/game-server:main-74bc879-1763324843 
           resources:
             requests:
               memory: "1Gi"
