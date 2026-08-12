@@ -210,9 +210,8 @@ var _ = Describe("Realm Controller", func() {
 
 			probe := deploy.Spec.Template.Spec.Containers[0].ReadinessProbe
 			Expect(probe).NotTo(BeNil())
-			Expect(probe.HTTPGet).NotTo(BeNil())
-			Expect(probe.HTTPGet.Path).To(Equal("/readyz"))
-			Expect(probe.HTTPGet.Port).To(Equal(intstr.FromInt32(8080)))
+			Expect(probe.TCPSocket).NotTo(BeNil())
+			Expect(probe.TCPSocket.Port).To(Equal(intstr.FromInt32(metricsPort)))
 		})
 	})
 })
