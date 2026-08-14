@@ -11,7 +11,7 @@ patches:
 images:
   - name: rejdeboer/game-server
     newName: registry.rejdeboer.com/game/game-server # {"$imagepolicy": "flux-system:game-server:name"}
-    newTag: main-6c1a03d-1786636760 # {"$imagepolicy": "flux-system:game-server:tag"}
+    newTag: main-86f76a5-1786738176 # {"$imagepolicy": "flux-system:game-server:tag"}
   - name: rejdeboer/web-server
     newName: registry.rejdeboer.com/game/web-server # {"$imagepolicy": "flux-system:web-server:name"}
     newTag: main-6c1a03d-1786637157 # {"$imagepolicy": "flux-system:web-server:tag"}
