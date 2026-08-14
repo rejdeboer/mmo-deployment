@@ -13,10 +13,6 @@ spec:
       maxSurge: "25%"
       maxUnavailable: "25%"
   template:
-    metadata:
-      labels:
-        # TODO: Do we need this?
-        realm: main
     spec:
       container: game-server
       ports:

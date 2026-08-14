@@ -1644,7 +1644,7 @@
       "hideTimepicker": false,
       "fiscalYearStartMonth": 0
     },
-    "title": "Gameserver Copy",
+    "title": "Gameserver",
     "variables": [
       {
         "kind": "QueryVariable",
