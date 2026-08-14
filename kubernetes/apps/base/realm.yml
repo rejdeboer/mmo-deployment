@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   zones:
-    - name: elwynn-forest
+    - name: meadow
       port: 9001
       playerCap: 500
     - name: stormwind
