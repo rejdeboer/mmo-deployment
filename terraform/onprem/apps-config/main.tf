@@ -11,6 +11,10 @@ terraform {
       source  = "integrations/github"
       version = "6.13.0"
     }
+    grafana = {
+      source  = "grafana/grafana"
+      version = "4.45.1"
+    }
     vault = {
       source  = "hashicorp/vault"
       version = "5.5.0"
@@ -19,6 +23,7 @@ terraform {
 }
 
 locals {
+  domain                       = "rejdeboer.com"
   github_org                   = "rejdeboer"
   github_server_repository     = "mmo-server"
   github_deployment_repository = "mmo-deployment"
@@ -59,5 +64,5 @@ resource "github_actions_secret" "registry_password" {
 resource "github_actions_variable" "registry" {
   repository    = local.github_server_repository
   variable_name = "REGISTRY"
-  value         = "registry.rejdeboer.com"
+  value         = "registry.${local.domain}"
 }

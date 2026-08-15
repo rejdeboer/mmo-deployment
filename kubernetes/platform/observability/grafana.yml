@@ -23,9 +23,6 @@ spec:
       grafana.ini:
       server:
         domain: grafana.${DOMAIN}
-    sidecar:
-      dashboards:
-        enabled: true
     datasources:
       datasources.yaml:
         apiVersion: 1
