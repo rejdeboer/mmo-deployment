@@ -15,7 +15,7 @@ resource "grafana_apps_provisioning_repository_v0alpha1" "sync" {
   }
 
   spec {
-    title       = "Game dashboards"
+    title       = "Game"
     description = "Game dashboards"
     type        = "github"
 
@@ -23,7 +23,7 @@ resource "grafana_apps_provisioning_repository_v0alpha1" "sync" {
 
     sync {
       enabled          = true
-      target           = "folderless"
+      target           = "folder"
       interval_seconds = 60
     }
 

@@ -1770,9 +1770,7 @@
       "spec": {
         "allowCustomValue": true,
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
