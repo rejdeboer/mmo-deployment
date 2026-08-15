@@ -19,15 +19,5 @@ configMapGenerator:
       labels:
         app.kubernetes.io/part-of: flux
         app.kubernetes.io/component: monitoring
-  - name: grafana-dashboards
-    files:
-      - dashboards/control-plane.json
-      - dashboards/cluster.json
-      - dashboards/game-server.json
-    options:
-      labels:
-        grafana_dashboard: "1"
-        app.kubernetes.io/part-of: flux
-        app.kubernetes.io/component: monitoring
 configurations:
   - kustomizeconfig.yml
