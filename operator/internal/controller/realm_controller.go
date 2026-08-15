@@ -150,15 +150,34 @@ func (r *RealmReconciler) reconcileZoneDeployment(ctx context.Context, realm *mm
 		replicas := int32(1)
 		deploy.Spec.Replicas = &replicas
 
-		labels := map[string]string{
+		// Strategy: Recreate ensures the old pod releases its hostPort before the
+		// new pod starts. This causes brief downtime (~5-15s) per zone during upgrades.
+		deploy.Spec.Strategy = appsv1.DeploymentStrategy{
+			Type: appsv1.RecreateDeploymentStrategyType,
+		}
+
+		// Selector labels are immutable — keep minimal
+		selectorLabels := map[string]string{
 			realmOwnerLabel: realm.Name,
 			zoneNameLabel:   zone.Name,
 			layerLabel:      fmt.Sprintf("%d", layerNum),
 		}
 
+		// Standard Kubernetes recommended labels for observability tooling
+		labels := map[string]string{
+			realmOwnerLabel:                realm.Name,
+			zoneNameLabel:                  zone.Name,
+			layerLabel:                     fmt.Sprintf("%d", layerNum),
+			"app.kubernetes.io/name":       "zone-server",
+			"app.kubernetes.io/instance":   fmt.Sprintf("%s-%s-%d", realm.Name, zone.Name, layerNum),
+			"app.kubernetes.io/component":  "game",
+			"app.kubernetes.io/part-of":    realm.Name,
+			"app.kubernetes.io/managed-by": "realm-operator",
+		}
+
 		deploy.Labels = labels
 		deploy.Spec.Selector = &metav1.LabelSelector{
-			MatchLabels: labels,
+			MatchLabels: selectorLabels,
 		}
 
 		// Build pod template from realm template
@@ -362,6 +381,20 @@ func (r *RealmReconciler) reconcileServiceMonitor(ctx context.Context, realm *mm
 				Port:     metricsPortName,
 				Path:     "/",
 				Interval: monitoringv1.Duration("15s"),
+				RelabelConfigs: []monitoringv1.RelabelConfig{
+					{
+						SourceLabels: []monitoringv1.LabelName{"__meta_kubernetes_pod_label_mmo_rejdeboer_com_realm"},
+						TargetLabel:  "realm",
+					},
+					{
+						SourceLabels: []monitoringv1.LabelName{"__meta_kubernetes_pod_label_mmo_rejdeboer_com_zone_name"},
+						TargetLabel:  "zone",
+					},
+					{
+						SourceLabels: []monitoringv1.LabelName{"__meta_kubernetes_pod_label_mmo_rejdeboer_com_layer"},
+						TargetLabel:  "layer",
+					},
+				},
 			},
 		}
 		return controllerutil.SetControllerReference(realm, sm, r.Scheme)
